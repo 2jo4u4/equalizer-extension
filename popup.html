@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>euqalizer</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      body {
+        max-width: 800px;
+        padding: 4px 8px;
+        background-color: rgba(28, 28, 28, 0.196);
+        overflow: auto;
+      }
+      span,
+      button {
+        font-size: 0.6rem;
+        line-height: 0.8rem;
+        font-weight: 900;
+      }
+      #dashboard {
+        display: flex;
+        flex-direction: column;
+      }
+      #shortcut-key {
+        display: flex;
+        flex-direction: row;
+        gap: 4px;
+      }
+      #shortcut-key button {
+        border: 1px solid white;
+        border-radius: 12px;
+        padding: 4px 8px;
+      }
+      #slider-container {
+        display: flex;
+        flex-direction: row;
+        margin-top: 8px;
+      }
+      #slider-container div {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+      }
+      #slider-container div input,
+      .input-placeholder {
+        width: 32px;
+        height: 160px;
+      }
+      #slider-container div input {
+        writing-mode: vertical-lr;
+        direction: rtl;
+      }
+      .input-placeholder {
+        display: flex;
+        justify-content: space-between;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="dashboard">
+      <div id="shortcut-key">
+        <button id="RESET">Reset</button>
+        <button onclick="send()">Test</button>
+      </div>
+      <div id="slider-container">
+        <div>
+          <span>HZ</span>
+          <span>max DB</span>
+          <div class="input-placeholder">
+            <span>12</span>
+            <span>6</span>
+            <span>0</span>
+            <span>-6</span>
+            <span>-12</span>
+          </div>
+          <span>min DB</span>
+        </div>
+        <div id="60hz">
+          <span>60 HZ</span>
+          <span>12 DB</span>
+          <input
+            max="12"
+            min="-12"
+            data-init="0"
+            data-hz="60"
+            data-type="peaking"
+            value="0"
+            step="0.5"
+            type="range"
+          />
+          <span>-12 DB</span>
+        </div>
+        <div id="230hz">
+          <span>230 HZ</span>
+          <span>12 DB</span>
+          <input
+            max="12"
+            min="-12"
+            data-init="0"
+            data-hz="230"
+            data-type="peaking"
+            value="0"
+            step="0.5"
+            type="range"
+          />
+          <span>-12 DB</span>
+        </div>
+        <div id="910hz">
+          <span>910 HZ</span>
+          <span>12 DB</span>
+          <input
+            max="12"
+            min="-12"
+            data-init="0"
+            data-hz="910"
+            data-type="peaking"
+            value="0"
+            step="0.5"
+            type="range"
+          />
+          <span>-12 DB</span>
+        </div>
+        <div id="4khz">
+          <span>4k HZ</span>
+          <span>12 DB</span>
+          <input
+            max="12"
+            min="-12"
+            data-init="0"
+            data-hz="4000"
+            data-type="peaking"
+            value="0"
+            step="0.5"
+            type="range"
+          />
+          <span>-12 DB</span>
+        </div>
+        <div id="14khz">
+          <span>14k HZ</span>
+          <span>12 DB</span>
+          <input
+            max="12"
+            min="-12"
+            data-init="0"
+            data-hz="14000"
+            data-type="peaking"
+            value="0"
+            step="0.5"
+            type="range"
+          />
+          <span>-12 DB</span>
+        </div>
+      </div>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+  "name": "Euqalizer",
+  "version": "0.0.1",
+  "description": "等化器",
+  "icons": {
+    "32": "icons/ctrl-32.png",
+    "64": "icons/ctrl-64.png"
+  },
+  "permissions": ["activeTab"],
+  "browser_action": {
+    "default_icon": "icons/ctrl-32.png",
+    "default_title": "Euqalizer",
+    "default_popup": "popup.html"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://*/*"],
+      "js": ["./euqalizer.js"]
+    }
+  ]
+}
