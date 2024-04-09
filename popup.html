@@ -45,117 +45,16 @@
         flex-direction: column;
         text-align: center;
       }
-      #slider-container div input,
       .input-placeholder {
         width: 32px;
         height: 160px;
-      }
-      #slider-container div input {
-        writing-mode: vertical-lr;
-        direction: rtl;
-      }
-      .input-placeholder {
         display: flex;
         justify-content: space-between;
       }
     </style>
+    <script src="customTag.js"></script>
   </head>
   <body>
-    <div id="dashboard">
-      <div id="shortcut-key">
-        <button id="RESET">Reset</button>
-        <button onclick="send()">Test</button>
-      </div>
-      <div id="slider-container">
-        <div>
-          <span>HZ</span>
-          <span>max DB</span>
-          <div class="input-placeholder">
-            <span>12</span>
-            <span>6</span>
-            <span>0</span>
-            <span>-6</span>
-            <span>-12</span>
-          </div>
-          <span>min DB</span>
-        </div>
-        <div id="60hz">
-          <span>60 HZ</span>
-          <span>12 DB</span>
-          <input
-            max="12"
-            min="-12"
-            data-init="0"
-            data-hz="60"
-            data-type="peaking"
-            value="0"
-            step="0.5"
-            type="range"
-          />
-          <span>-12 DB</span>
-        </div>
-        <div id="230hz">
-          <span>230 HZ</span>
-          <span>12 DB</span>
-          <input
-            max="12"
-            min="-12"
-            data-init="0"
-            data-hz="230"
-            data-type="peaking"
-            value="0"
-            step="0.5"
-            type="range"
-          />
-          <span>-12 DB</span>
-        </div>
-        <div id="910hz">
-          <span>910 HZ</span>
-          <span>12 DB</span>
-          <input
-            max="12"
-            min="-12"
-            data-init="0"
-            data-hz="910"
-            data-type="peaking"
-            value="0"
-            step="0.5"
-            type="range"
-          />
-          <span>-12 DB</span>
-        </div>
-        <div id="4khz">
-          <span>4k HZ</span>
-          <span>12 DB</span>
-          <input
-            max="12"
-            min="-12"
-            data-init="0"
-            data-hz="4000"
-            data-type="peaking"
-            value="0"
-            step="0.5"
-            type="range"
-          />
-          <span>-12 DB</span>
-        </div>
-        <div id="14khz">
-          <span>14k HZ</span>
-          <span>12 DB</span>
-          <input
-            max="12"
-            min="-12"
-            data-init="0"
-            data-hz="14000"
-            data-type="peaking"
-            value="0"
-            step="0.5"
-            type="range"
-          />
-          <span>-12 DB</span>
-        </div>
-      </div>
-    </div>
     <script src="popup.js"></script>
   </body>
 </html>

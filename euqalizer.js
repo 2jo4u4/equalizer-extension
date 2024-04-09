@@ -64,127 +64,82 @@ class AudioContextWithMethod {
   }
 }
 class Equalizer {
-  constructor(el, audioCtx) {
-    this.audioCtx = audioCtx;
-    this.media = el;
+  constructor(el) {
+    this.audio = new AudioContextWithMethod();
+    this.audioCtx = this.audio.audioCtx;
     this.queue = new Map();
-    this.index = 1;
+    this.media = el;
+    this.isStream = false;
   }
   addToQueue(filter, id) {
-    const indexstr = this.index.toString();
-    this.queue.set(typeof id === "string" ? id : indexstr, [filter, indexstr]);
-    this.index++;
+    this.queue.set(id, filter);
     return this;
   }
-  stream() {
-    this.source = this.audioCtx.createMediaElementSource(this.media);
-    let last = this.source;
-    this.queue.forEach(([filter]) => {
-      last.connect(filter);
-      last = filter;
-    });
-    last.connect(this.audioCtx.destination);
-  }
-}
-class EqualizerUIComponent {
-  static dashboard() {
-    const dashboard = document.createElement("div");
-    dashboard.style.border = "1px #929292 solid";
-    dashboard.style.margin = "8px";
-    dashboard.style.padding = "8px";
-    dashboard.style.borderRadius = "8px";
-    dashboard.style.background = "#81adff3b";
-    dashboard.style.width = "fit-content";
-    dashboard.style.display = "flex";
-    dashboard.style.gap = "10px";
-    return dashboard;
-  }
-  static sliderInput() {
-    const input = document.createElement("input");
-    input.type = "range";
-    input.style.writingMode = "vertical-lr";
-    input.style.direction = "rtl";
-    input.style.height = "180px";
-    input.style.width = "32px";
-    return input;
-  }
-  static sliderContiner() {
-    const block = document.createElement("div");
-    block.style.display = "flex";
-    block.style.flexDirection = "column";
-    block.style.alignItems = "center";
-    block.style.width = "fit-content";
-    return block;
-  }
-  constructor(el, contextOptions) {
-    this.core = new AudioContextWithMethod(contextOptions);
-    this.equalizer = new Equalizer(el, this.core.audioCtx);
-    this.dashboardEl = EqualizerUIComponent.dashboard();
-    this.sliderList = [];
-    this.stream = this.equalizer.stream.bind(this.equalizer);
-  }
-  reset() {
-    this.sliderList.forEach(({ input }) => {
-      if (input.dataset.init) {
-        input.value = input.dataset.init;
-        input.dispatchEvent(
-          new InputEvent("input", { data: input.dataset.init })
-        );
-      }
-    });
-  }
-  addSilder(init, max, min, step, option) {
-    const initStr = init.toString(),
-      maxStr = max.toString(),
-      minStr = min.toString(),
-      stepStr = step.toString(),
-      input = EqualizerUIComponent.sliderInput(),
-      container = EqualizerUIComponent.sliderContiner();
-    input.max = maxStr;
-    input.min = minStr;
-    input.step = stepStr;
-    input.value = initStr;
-    input.dataset.init = initStr;
-    const { target, filter, addToDashBoard, fliterType, f, q, g } =
-      Object.assign(
-        {
-          target: "gain",
-          addToDashBoard: true,
-          filter: undefined,
-          fliterType: undefined,
-          f: 350,
-          q: 1,
-          g: 0,
-        },
-        option
-      );
-    let targetFilter;
-    if (filter !== undefined) {
-      targetFilter = filter;
-    } else if (fliterType !== undefined) {
-      targetFilter = this.core[fliterType]({ f, q, g });
-    }
-    if (targetFilter) {
-      input.addEventListener("input", function () {
-        const newVal = parseFloat(this.value);
-        targetFilter[target].value = newVal;
+  stream(el = this.media) {
+    if (this.isStream) return;
+    if (el) {
+      this.media = el;
+      this.source = this.audioCtx.createMediaElementSource(this.media);
+      let last = this.source;
+      this.queue.forEach((filter) => {
+        last.connect(filter);
+        last = filter;
       });
-      this.equalizer.addToQueue(targetFilter);
+      last.connect(this.audioCtx.destination);
+      this.isStream = true;
     }
-    const titleText = document.createElement("span"),
-      maxText = document.createElement("span"),
-      minText = document.createElement("span");
-    maxText.innerText = maxStr;
-    minText.innerText = minStr;
-    titleText.innerHTML = `${targetFilter.frequency.value} HZ`;
-    titleText.style.marginBottom = "4px";
-    container.append(titleText, maxText, input, minText);
-    this.sliderList.push({ container, input });
-    if (addToDashBoard) {
-      this.dashboardEl.append(container);
-    }
-    return this;
   }
 }
 
-browser.runtime.onMessage.addListener(console.log);
+let isMount = false;
+let equalizer = null;
+
+browser.runtime.onMessage.addListener((...msg) => {
+  const [command, tabs] = msg;
+
+  /** @type {"open"|"connect"|"ctrl"|"debug"} */
+  const action = command.type;
+
+  switch (action) {
+    case "open":
+      // 打開擴充的html
+      // TODO:: 檢查是否已經生成
+      // 若已生成則覆用，並通知更換樣式
+      if (isMount) {
+        // 已生成，通知更換樣式
+        const data = [];
+        equalizer.queue.forEach((filter, id) => {
+          data.push({ id, val: filter.gain.value });
+        });
+        browser.runtime.sendMessage({ type: "initSlider", data });
+      } else {
+        equalizer = new Equalizer();
+        isMount = true;
+        command.data.forEach(({ id, hz, init, type }) => {
+          const filter = equalizer.audio[type]({ f: hz, q: 0.7, g: init });
+          equalizer.addToQueue(filter, id);
+        });
+      }
+      break;
+    case "connect":
+      if (isMount) {
+        const video = findMedia();
+        video && equalizer.stream(video);
+      }
+      break;
+    case "ctrl":
+      if (equalizer) {
+        const { id, val } = command.data;
+        const filter = equalizer.queue.get(id);
+        filter.gain.value = val;
+      }
+      break;
+    case "debug":
+      console.log("debug", command.data);
+      break;
+  }
+});
+
+function findMedia() {
+  return document.querySelector("video");
+}
