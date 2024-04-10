@@ -4,17 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>euqalizer</title>
-    <script src="customTag.js"></script>
+    <script type="application/javascript" src="browser-polyfill.js"></script>
+    <script type="application/javascript" src="customTag.js"></script>
     <style>
       * {
         padding: 0;
         margin: 0;
+        box-sizing: border-box;
       }
       body {
         max-width: 800px;
         padding: 4px 8px;
         background-color: rgba(28, 28, 28, 0.196);
         overflow: auto;
+        width: fit-content;
       }
       span,
       button {

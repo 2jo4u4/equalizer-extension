@@ -15,7 +15,7 @@ export class Slider extends HTMLElement {
     this.minDB = document.createElement("span");
     this.slider = document.createElement("input");
 
-    this.hzText.innerText = this.getAttribute("title") ?? ""
+    this.hzText.innerText = this.getAttribute("title") ?? "";
     const maxStr = this.getAttribute("max") ?? "12";
     const minStr = this.getAttribute("min") ?? "-12";
     this.maxDB.innerText = `${maxStr}DB`;
@@ -36,6 +36,7 @@ export class Slider extends HTMLElement {
         display: flex;
         flex-direction: column;
         text-align: center;
+        width: max-content;
     }
     :host input {
         width: 32px;
@@ -63,7 +64,7 @@ export class Slider extends HTMLElement {
   }
 
   reset() {
-    this.slider.value = this.dataset.init ?? "0"
+    this.slider.value = this.dataset.init ?? "0";
   }
 
   setValue(val: number) {
@@ -78,8 +79,7 @@ export class Slider extends HTMLElement {
     this.slider.setAttribute("step", val.toString());
   }
 
-
-  setLimit(type: 'max' | 'min', value: number) {
+  setLimit(type: "max" | "min", value: number) {
     const str = value.toString();
     const text = `${str}DB`;
     if (type === "max") {

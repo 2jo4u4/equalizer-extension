@@ -1,1 +1,1 @@
-import "webextension-polyfill";
+
