@@ -1,60 +1,61 @@
-class AudioContextWithMethod {
-  constructor(contextOptions) {
+export class AudioContextWithMethod {
+  audioCtx: AudioContext;
+  constructor(contextOptions?: AudioContextOptions) {
     this.audioCtx = new AudioContext(contextOptions);
   }
   createBiquadFilter() {
     return this.audioCtx.createBiquadFilter();
   }
-  allpass({ f, g, q }) {
+  allpass({ f, g, q }: FilterParam) {
     const filter = this.createBiquadFilter();
     filter.type = "allpass";
     filter.frequency.value = f;
     filter.Q.value = q;
     return filter;
   }
-  bandpass({ f, g, q }) {
+  bandpass({ f, g, q }: FilterParam) {
     const filter = this.createBiquadFilter();
     filter.type = "bandpass";
     filter.frequency.value = f;
     filter.Q.value = q;
     return filter;
   }
-  highpass({ f, g, q }) {
+  highpass({ f, g, q }: FilterParam) {
     const filter = this.createBiquadFilter();
     filter.type = "highpass";
     filter.frequency.value = f;
     filter.Q.value = q;
     return filter;
   }
-  highshelf({ f, g, q }) {
+  highshelf({ f, g, q }: FilterParam) {
     const filter = this.createBiquadFilter();
     filter.type = "highshelf";
     filter.frequency.value = f;
     filter.gain.value = g;
     return filter;
   }
-  lowpass({ f, g, q }) {
+  lowpass({ f, g, q }: FilterParam) {
     const filter = this.createBiquadFilter();
     filter.type = "lowpass";
     filter.frequency.value = f;
     filter.Q.value = q;
     return filter;
   }
-  lowshelf({ f, g, q }) {
+  lowshelf({ f, g, q }: FilterParam) {
     const filter = this.createBiquadFilter();
     filter.type = "lowshelf";
     filter.frequency.value = f;
     filter.gain.value = g;
     return filter;
   }
-  notch({ f, g, q }) {
+  notch({ f, g, q }: FilterParam) {
     const filter = this.createBiquadFilter();
     filter.type = "notch";
     filter.frequency.value = f;
     filter.Q.value = q;
     return filter;
   }
-  peaking({ f, g, q }) {
+  peaking({ f, g, q }: FilterParam) {
     const filter = this.createBiquadFilter();
     filter.type = "peaking";
     filter.frequency.value = f;
@@ -63,15 +64,21 @@ class AudioContextWithMethod {
     return filter;
   }
 }
-class Equalizer {
-  constructor(el) {
+export class Equalizer {
+  audio: AudioContextWithMethod;
+  audioCtx: AudioContext;
+  queue: Map<any, any>;
+  media!: HTMLMediaElement;
+  isStream: boolean;
+  source!: MediaElementAudioSourceNode;
+  constructor(el?: HTMLMediaElement) {
     this.audio = new AudioContextWithMethod();
     this.audioCtx = this.audio.audioCtx;
     this.queue = new Map();
-    this.media = el;
+    el && (this.media = el)
     this.isStream = false;
   }
-  addToQueue(filter, id) {
+  addToQueue(filter: BiquadFilterNode, id: string) {
     this.queue.set(id, filter);
     return this;
   }
@@ -91,55 +98,3 @@ class Equalizer {
   }
 }
 
-let isMount = false;
-let equalizer = null;
-
-browser.runtime.onMessage.addListener((...msg) => {
-  const [command, tabs] = msg;
-
-  /** @type {"open"|"connect"|"ctrl"|"debug"} */
-  const action = command.type;
-
-  switch (action) {
-    case "open":
-      // 打開擴充的html
-      // TODO:: 檢查是否已經生成
-      // 若已生成則覆用，並通知更換樣式
-      if (isMount) {
-        // 已生成，通知更換樣式
-        const data = [];
-        equalizer.queue.forEach((filter, id) => {
-          data.push({ id, val: filter.gain.value });
-        });
-        browser.runtime.sendMessage({ type: "initSlider", data });
-      } else {
-        equalizer = new Equalizer();
-        isMount = true;
-        command.data.forEach(({ id, hz, init, type }) => {
-          const filter = equalizer.audio[type]({ f: hz, q: 0.7, g: init });
-          equalizer.addToQueue(filter, id);
-        });
-      }
-      break;
-    case "connect":
-      if (isMount) {
-        const video = findMedia();
-        video && equalizer.stream(video);
-      }
-      break;
-    case "ctrl":
-      if (equalizer) {
-        const { id, val } = command.data;
-        const filter = equalizer.queue.get(id);
-        filter.gain.value = val;
-      }
-      break;
-    case "debug":
-      console.log("debug", command.data);
-      break;
-  }
-});
-
-function findMedia() {
-  return document.querySelector("video");
-}

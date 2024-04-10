@@ -1,8 +1,13 @@
-class Slider extends HTMLElement {
+export class Slider extends HTMLElement {
+  showRoot: ShadowRoot;
+  container: HTMLDivElement;
+  hzText: HTMLSpanElement;
+  maxDB: HTMLSpanElement;
+  minDB: HTMLSpanElement;
+  slider: HTMLInputElement;
   constructor() {
     super();
     this.showRoot = this.attachShadow({ mode: "open" });
-    this.sliderName = "AASSS";
 
     this.container = document.createElement("div");
     this.hzText = document.createElement("span");
@@ -10,7 +15,7 @@ class Slider extends HTMLElement {
     this.minDB = document.createElement("span");
     this.slider = document.createElement("input");
 
-    this.hzText.innerText = this.getAttribute("title");
+    this.hzText.innerText = this.getAttribute("title") ?? ""
     const maxStr = this.getAttribute("max") ?? "12";
     const minStr = this.getAttribute("min") ?? "-12";
     this.maxDB.innerText = `${maxStr}DB`;
@@ -58,35 +63,23 @@ class Slider extends HTMLElement {
   }
 
   reset() {
-    this.slider.value = this.dataset.init;
+    this.slider.value = this.dataset.init ?? "0"
   }
 
-  /**
-   * @param {number} val
-   */
-  setValue(val) {
+  setValue(val: number) {
     this.slider.value = val.toString();
   }
 
-  /**
-   * @param {string} title
-   */
-  setTitle(title) {
+  setTitle(title: string) {
     this.hzText.innerText = title;
   }
-  /**
-   *
-   * @param {number} val
-   */
-  setStep(val) {
+
+  setStep(val: number) {
     this.slider.setAttribute("step", val.toString());
   }
 
-  /**
-   * @param {'max'|'min'} type
-   * @param {number} value
-   */
-  setLimit(type, value) {
+
+  setLimit(type: 'max' | 'min', value: number) {
     const str = value.toString();
     const text = `${str}DB`;
     if (type === "max") {
