@@ -7,7 +7,7 @@
     "32": "icons/ctrl-32.png",
     "64": "icons/ctrl-64.png"
   },
-  "permissions": ["activeTab"],
+  "permissions": ["activeTab", "storage"],
   "background": {
     "scripts": ["browser-polyfill.js", "background.js"]
   },
