@@ -68,8 +68,9 @@ browser.runtime.onMessage.addListener((msg: SendMsg, tabs) => {
       connectBtn.remove()
       break
     }
-    default: {
-      sendMessageToCurrentTabs("debug", msg.data);
+    default:
+    case "debug": {
+      console.log("debug", msg);
       break;
     }
   }

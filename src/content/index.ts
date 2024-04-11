@@ -12,6 +12,7 @@ let equalizer: Equalizer;
     const filter = equalizer.audio[type]({ f: hz, q: 0.7, g: init });
     equalizer.addToQueue(filter, id);
   });
+  listener()
 }());
 
 function getCurrentState() {
@@ -27,38 +28,40 @@ function getCurrentState() {
   return filters
 }
 
-browser.runtime.onMessage.addListener((msg: SendMsg, tabs) => {
-  switch (msg.type) {
-    case "open": {
-      sendMessageToEuqalizer('initUI', { fliter: getCurrentState(), isConnect: equalizer.isStream })
-      break;
-    }
-    case "connect": {
-      const video = findMedia();
-      if (video) {
-        equalizer.stream(video);
-        sendMessageToEuqalizer('hiddenConnectBtn', null)
+function listener() {
+  browser.runtime.onMessage.addListener((msg: SendMsg, tabs) => {
+    switch (msg.type) {
+      case "open": {
+        sendMessageToEuqalizer('initUI', { fliter: getCurrentState(), isConnect: equalizer.isStream })
+        break;
       }
-      break;
+      case "connect": {
+        const video = findMedia();
+        if (video) {
+          equalizer.stream(video);
+          sendMessageToEuqalizer('hiddenConnectBtn', null)
+        }
+        break;
+      }
+      case "ctrl": {
+        const { id, val } = msg.data as MsgToFormat['ctrl']
+        const filter = equalizer.queue.get(id);
+        filter && (filter.gain.value = val)
+        break;
+      }
+      case 'store-setting': {
+        StorageCtrl.set(getCurrentState())
+        break
+      }
+      default:
+      case "debug": {
+        console.log("debug", msg);
+        break;
+      }
     }
-    case "ctrl": {
-      const { id, val } = msg.data as MsgToFormat['ctrl']
-      const filter = equalizer.queue.get(id);
-      filter && (filter.gain.value = val)
-      break;
-    }
-    case 'store-setting': {
-      StorageCtrl.set(getCurrentState())
-      break
-    }
-    case "debug": {
-      console.log("debug", msg.data as MsgToFormat['debug']);
-      break;
-    }
-  }
-});
+  });
+}
 
 function findMedia() {
   return document.querySelector("video");
 }
-
