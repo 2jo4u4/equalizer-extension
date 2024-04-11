@@ -5,10 +5,10 @@ import CopyPlugin from "copy-webpack-plugin";
 const config: webpack.Configuration = {
   mode: "production",
   entry: {
-    pop: path.resolve(__dirname, "src/pop.ts"),
-    background: path.resolve(__dirname, "src/background.ts"),
-    content: path.resolve(__dirname, "src/content.ts"),
-    customTag: path.resolve(__dirname, "src/customTag.ts"),
+    pop: path.resolve(__dirname, "src/pop/index.ts"),
+    background: path.resolve(__dirname, "src/background/index.ts"),
+    content: path.resolve(__dirname, "src/content/index.ts"),
+    customTag: path.resolve(__dirname, "src/pop/customTag.ts"),
   },
   output: {
     clean: true,

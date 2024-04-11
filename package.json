@@ -1,13 +1,14 @@
 {
-  "name": "equalizer-ts",
-  "version": "1.0.0",
-  "description": "",
+  "name": "equalizer-extension",
+  "version": "0.1.0",
+  "description": "等化器",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
+    "watch": "webpack --watch",
     "dev": "web-ext run -s dist"
   },
-  "author": "",
+  "author": "Huang Jay",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.12.7",

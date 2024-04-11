@@ -1,17 +1,28 @@
 import type Browser from "webextension-polyfill";
-import type { Slider } from "./src/customTag";
+import type { Slider } from "./src/pop/customTag";
 
 declare global {
-  class CustomSliderElement extends Slider {}
-  let browser: typeof Browser;
-  type NotifyType = "open" | "connect" | "ctrl" | "debug" | "initUI";
-  interface MsgToContent {}
-  interface MsgToPop {}
+  class CustomSliderElement extends Slider { }
+  const browser: typeof Browser;
+  type NotifyType = keyof MsgToFormat
+
+  interface MsgToFormat {
+    initUI: { fliter: Filter[], isConnect: boolean }
+    open: null | undefined
+    connect: null | undefined
+    ctrl: { id: string; val: number }
+    debug: any
+    "store-setting": null | undefined
+    hiddenConnectBtn: null | undefined
+  }
+  interface SendMsg {
+    type: NotifyType,
+    data: MsgToFormat[NotifyType]
+  }
   interface Filter {
     id: string;
     hz: number;
     init: number;
-    title: string;
     type: BiquadFilterType;
   }
   interface FilterParam {

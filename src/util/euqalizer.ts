@@ -67,7 +67,7 @@ export class AudioContextWithMethod {
 export class Equalizer {
   audio: AudioContextWithMethod;
   audioCtx: AudioContext;
-  queue: Map<any, any>;
+  queue: Map<string, BiquadFilterNode>;
   media!: HTMLMediaElement;
   isStream: boolean;
   source!: MediaElementAudioSourceNode;
@@ -75,7 +75,7 @@ export class Equalizer {
     this.audio = new AudioContextWithMethod();
     this.audioCtx = this.audio.audioCtx;
     this.queue = new Map();
-    el && (this.media = el)
+    el && (this.media = el);
     this.isStream = false;
   }
   addToQueue(filter: BiquadFilterNode, id: string) {
@@ -87,7 +87,7 @@ export class Equalizer {
     if (el) {
       this.media = el;
       this.source = this.audioCtx.createMediaElementSource(this.media);
-      let last = this.source;
+      let last: MediaElementAudioSourceNode | BiquadFilterNode = this.source;
       this.queue.forEach((filter) => {
         last.connect(filter);
         last = filter;
@@ -97,4 +97,3 @@ export class Equalizer {
     }
   }
 }
-
