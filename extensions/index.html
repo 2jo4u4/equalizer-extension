@@ -4,62 +4,94 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>euqalizer</title>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
     <script type="application/javascript" src="browser-polyfill.js"></script>
     <script type="application/javascript" src="customTag.js"></script>
+    <script defer src="pop.js"></script>
     <style>
-      * {
-        padding: 0;
+      body {
+        padding: 8px;
         margin: 0;
+        background-color: rgba(28, 28, 28, 0.196);
+        overflow: hidden;
         box-sizing: border-box;
       }
-      body {
-        max-width: 800px;
-        padding: 4px 8px;
-        background-color: rgba(28, 28, 28, 0.196);
+      .panel {
+        box-sizing: border-box;
+        width: 300px;
+        min-height: 250px;
         overflow: auto;
-        width: fit-content;
+        background-color: white;
       }
-      h1,
-      span,
-      button {
-        font-size: 0.6rem;
-        line-height: 0.8rem;
-        font-weight: 900;
+      .panel#board-panel {
+        padding: 8px;
       }
-      #dashboard {
+      .panel#board-panel div {
+        box-sizing: border-box;
         display: flex;
-        flex-direction: column;
+        align-items: center;
       }
-      #shortcut-key {
-        display: flex;
-        flex-direction: row;
-        gap: 4px;
+      .panel#board-panel div md-slider {
+        flex: 1;
       }
-      #shortcut-key button {
-        border: 1px solid white;
-        border-radius: 12px;
-        padding: 4px 8px;
-      }
-      #slider-container {
-        display: flex;
-        flex-direction: row;
-        margin-top: 8px;
-      }
-      #slider-container div {
-        display: flex;
-        flex-direction: column;
+      .panel#board-panel div span {
+        width: 24%;
         text-align: center;
-      }
-      .input-placeholder {
-        width: 32px;
-        height: 160px;
-        display: flex;
-        justify-content: space-between;
       }
     </style>
   </head>
   <body>
-    <h1 id="noMatch">Euqalizer No Match Domain</h1>
-    <script src="pop.js"></script>
+    <md-tabs id="tabs" aria-label="Content to view">
+      <md-primary-tab id="home" aria-label="home">
+        <md-icon slot="icon">home</md-icon>
+      </md-primary-tab>
+      <md-primary-tab id="board" aria-label="board">
+        <md-icon slot="icon">piano</md-icon>
+      </md-primary-tab>
+      <md-primary-tab id="setting" aria-label="setting">
+        <md-icon slot="icon">settings</md-icon>
+      </md-primary-tab>
+    </md-tabs>
+
+    <div id="home-panel" role="tabpanel" class="panel" aria-labelledby="board">
+      <p>等化器說明</p>
+    </div>
+
+    <div
+      id="board-panel"
+      role="tabpanel"
+      class="panel"
+      aria-labelledby="board"
+      hidden
+    >
+      <md-filled-button>保存</md-filled-button>
+      <md-filled-button>重置</md-filled-button>
+
+      <!-- slider: dynamic generate html element -->
+    </div>
+
+    <div
+      id="setting-panel"
+      class="panel"
+      role="tabpanel"
+      aria-labelledby="setting"
+      hidden
+    >
+      <md-list>
+        <!-- example -->
+        <!-- <md-list-item>
+          <div slot="headline">Orange</div>
+          <md-icon slot="start">nutrition</md-icon>
+          <md-icon slot="end">recommend</md-icon>
+        </md-list-item> -->
+        <md-list-item>
+          <div slot="headline">自動連接媒體</div>
+          <md-switch id="auto-connecnt-media" slot="end"></md-switch>
+        </md-list-item>
+      </md-list>
+    </div>
   </body>
 </html>
