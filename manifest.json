@@ -1,26 +1,22 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Euqalizer",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "等化器",
   "icons": {
     "32": "icons/ctrl-32.png",
     "64": "icons/ctrl-64.png"
   },
-  "permissions": ["activeTab"],
-  "background": {
-    "scripts": ["browser-polyfill.js", "background.js"]
-  },
-  "browser_action": {
+  "permissions": ["activeTab", "storage"],
+  "action": {
     "default_icon": "icons/ctrl-32.png",
     "default_title": "Euqalizer",
-    "default_popup": "popup.html"
+    "default_popup": "index.html"
   },
-
   "content_scripts": [
     {
       "matches": ["https://*/*"],
-      "js": ["euqalizer.js"]
+      "js": ["browser-polyfill.js", "content.js"]
     }
   ]
 }
