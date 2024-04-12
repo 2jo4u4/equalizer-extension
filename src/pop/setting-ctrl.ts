@@ -1,10 +1,10 @@
 import { Store } from "../util";
-import { autoConnecntMedia } from "./ids";
+import { autoConnectMedia } from "./ids";
 import type { MdSwitch } from "@material/web/switch/switch";
 
 (async function () {
   const switchBtn = document.querySelector(
-    `#${autoConnecntMedia}`
+    `#${autoConnectMedia}`
   ) as MdSwitch | null;
   if (switchBtn) {
     switchBtn.addEventListener("change", function () {

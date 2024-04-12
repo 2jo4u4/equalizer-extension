@@ -7,7 +7,11 @@ declare global {
   type NotifyType = keyof MsgToFormat;
 
   interface MsgToFormat {
-    initUI: { fliter: Filter[]; isConnect: boolean };
+    initUI: {
+      fliter: Filter[];
+      isConnect: boolean;
+      isAutoConnect: boolean;
+    };
     open: null | undefined;
     connect: null | undefined;
     ctrl: { index: number; val: number };

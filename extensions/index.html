@@ -41,6 +41,10 @@
         width: 24%;
         text-align: center;
       }
+      #btnContainer {
+        gap: 4px;
+        margin-bottom: 8px;
+      }
     </style>
   </head>
   <body>
@@ -57,7 +61,30 @@
     </md-tabs>
 
     <div id="home-panel" role="tabpanel" class="panel" aria-labelledby="board">
-      <p>等化器說明</p>
+      <md-list>
+        <md-list-item> 關於等化器 </md-list-item>
+        <md-divider></md-divider>
+        <md-list-item>
+          <div slot="headline">60 HZ</div>
+          <div slot="supporting-text">低音增益</div>
+        </md-list-item>
+        <md-list-item>
+          <div slot="headline">230 HZ</div>
+          <div slot="supporting-text">低音增益，亦可感受到音量增大</div>
+        </md-list-item>
+        <md-list-item>
+          <div slot="headline">910 HZ</div>
+          <div slot="supporting-text">中間增益，可以感受到音量增大</div>
+        </md-list-item>
+        <md-list-item>
+          <div slot="headline">4K HZ</div>
+          <div slot="supporting-text">高音增益，可調整人生的清晰度</div>
+        </md-list-item>
+        <md-list-item>
+          <div slot="headline">14K HZ</div>
+          <div slot="supporting-text">高音增益</div>
+        </md-list-item>
+      </md-list>
     </div>
 
     <div
@@ -67,9 +94,6 @@
       aria-labelledby="board"
       hidden
     >
-      <md-filled-button>保存</md-filled-button>
-      <md-filled-button>重置</md-filled-button>
-
       <!-- slider: dynamic generate html element -->
     </div>
 
@@ -89,7 +113,7 @@
         </md-list-item> -->
         <md-list-item>
           <div slot="headline">自動連接媒體</div>
-          <md-switch id="auto-connecnt-media" slot="end"></md-switch>
+          <md-switch id="auto-connect-media" slot="end"></md-switch>
         </md-list-item>
       </md-list>
     </div>
