@@ -1,8 +1,8 @@
 export const tabsID = "tabs";
-export const homeTabsID = "home";
+export const helpTabsID = "help";
 export const boardTabsID = "board";
 export const settingTabsID = "setting";
-export const homePanelID = "home-panel";
+export const helpPanelID = "help-panel";
 export const boardPanelID = "board-panel";
 export const settingPanelID = "setting-panel";
 export const autoConnectMedia = "auto-connect-media";

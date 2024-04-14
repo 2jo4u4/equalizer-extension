@@ -1,6 +1,6 @@
 import "./tab-ctrl";
 import "./setting-ctrl";
-import "./home-ctrl";
+import "./help-ctrl";
 import { SliderArray } from "./board-ctrl";
 
 import { sendMessageToCurrentTabs } from "../util";

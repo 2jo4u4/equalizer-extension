@@ -49,18 +49,28 @@
   </head>
   <body>
     <md-tabs id="tabs" aria-label="Content to view">
-      <md-primary-tab id="home" aria-label="home">
-        <md-icon slot="icon">home</md-icon>
-      </md-primary-tab>
       <md-primary-tab id="board" aria-label="board">
         <md-icon slot="icon">piano</md-icon>
+      </md-primary-tab>
+      <md-primary-tab id="help" aria-label="help">
+        <md-icon slot="icon">help</md-icon>
       </md-primary-tab>
       <md-primary-tab id="setting" aria-label="setting">
         <md-icon slot="icon">settings</md-icon>
       </md-primary-tab>
     </md-tabs>
 
-    <div id="home-panel" role="tabpanel" class="panel" aria-labelledby="board">
+    <div id="board-panel" role="tabpanel" class="panel" aria-labelledby="board">
+      <!-- slider: dynamic generate html element -->
+    </div>
+
+    <div
+      id="help-panel"
+      role="tabpanel"
+      class="panel"
+      aria-labelledby="board"
+      hidden
+    >
       <md-list>
         <md-list-item> 關於等化器 </md-list-item>
         <md-divider></md-divider>
@@ -78,23 +88,13 @@
         </md-list-item>
         <md-list-item>
           <div slot="headline">4K HZ</div>
-          <div slot="supporting-text">高音增益，可調整人生的清晰度</div>
+          <div slot="supporting-text">高音增益，可調整人聲的清晰度</div>
         </md-list-item>
         <md-list-item>
           <div slot="headline">14K HZ</div>
           <div slot="supporting-text">高音增益</div>
         </md-list-item>
       </md-list>
-    </div>
-
-    <div
-      id="board-panel"
-      role="tabpanel"
-      class="panel"
-      aria-labelledby="board"
-      hidden
-    >
-      <!-- slider: dynamic generate html element -->
     </div>
 
     <div
