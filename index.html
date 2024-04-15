@@ -49,18 +49,40 @@
   </head>
   <body>
     <md-tabs id="tabs" aria-label="Content to view">
-      <md-primary-tab id="home" aria-label="home">
-        <md-icon slot="icon">home</md-icon>
-      </md-primary-tab>
       <md-primary-tab id="board" aria-label="board">
         <md-icon slot="icon">piano</md-icon>
+      </md-primary-tab>
+      <md-primary-tab id="help" aria-label="help">
+        <md-icon slot="icon">help</md-icon>
       </md-primary-tab>
       <md-primary-tab id="setting" aria-label="setting">
         <md-icon slot="icon">settings</md-icon>
       </md-primary-tab>
     </md-tabs>
 
-    <div id="home-panel" role="tabpanel" class="panel" aria-labelledby="board">
+    <div id="board-panel" role="tabpanel" class="panel" aria-labelledby="board">
+      <md-icon-button title="儲存設定">
+        <md-icon>save_as</md-icon>
+      </md-icon-button>
+      <md-icon-button title="重置設定">
+        <md-icon>device_reset</md-icon>
+      </md-icon-button>
+      <md-icon-button title="掛載媒體">
+        <md-icon>add_link</md-icon>
+      </md-icon-button>
+      <md-icon-button title="刪除當前設定">
+        <md-icon>delete</md-icon>
+      </md-icon-button>
+      <!-- slider: dynamic generate html element -->
+    </div>
+
+    <div
+      id="help-panel"
+      role="tabpanel"
+      class="panel"
+      aria-labelledby="board"
+      hidden
+    >
       <md-list>
         <md-list-item> 關於等化器 </md-list-item>
         <md-divider></md-divider>
@@ -78,23 +100,13 @@
         </md-list-item>
         <md-list-item>
           <div slot="headline">4K HZ</div>
-          <div slot="supporting-text">高音增益，可調整人生的清晰度</div>
+          <div slot="supporting-text">高音增益，可調整人聲的清晰度</div>
         </md-list-item>
         <md-list-item>
           <div slot="headline">14K HZ</div>
           <div slot="supporting-text">高音增益</div>
         </md-list-item>
       </md-list>
-    </div>
-
-    <div
-      id="board-panel"
-      role="tabpanel"
-      class="panel"
-      aria-labelledby="board"
-      hidden
-    >
-      <!-- slider: dynamic generate html element -->
     </div>
 
     <div
@@ -117,5 +129,23 @@
         </md-list-item>
       </md-list>
     </div>
+
+    <md-dialog>
+      <div slot="headline">儲存當前設定</div>
+      <md-filled-text-field
+        slot="content"
+        label="名稱"
+        value=""
+      ></md-filled-text-field>
+
+      <div class="footer" slot="actions">
+        <md-icon-button>
+          <md-icon>close</md-icon>
+        </md-icon-button>
+        <md-icon-button>
+          <md-icon>check</md-icon>
+        </md-icon-button>
+      </div>
+    </md-dialog>
   </body>
 </html>
