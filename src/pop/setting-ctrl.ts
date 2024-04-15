@@ -1,5 +1,4 @@
 import { Store } from "../util";
-
 import { auto_connect_btn } from "./bind.element";
 
 (async function () {

@@ -1,24 +1,23 @@
 import "./tab-ctrl";
 import "./setting-ctrl";
 import "./help-ctrl";
-import { SliderArray } from "./board-ctrl";
+import { SliderArray, rerenderSelect } from "./board-ctrl";
 
 import { sendMessageToCurrentTabs } from "../util";
-import { EmitEvent } from "./customEvent";
 import { auto_connect_btn } from "./bind.element";
 
 browser.runtime.onMessage.addListener((msg: SendMsg, tabs) => {
   switch (msg.type) {
     case "initUI": {
-      const { fliter, isAutoConnect, isConnect } =
-        msg.data as MsgToFormat["initUI"];
+      const { fliter, isAutoConnect } = msg.data as MsgToFormat["initUI"];
       SliderArray.forEach((el, index) => {
-        el.value = fliter[index].init;
+        el.value = fliter[index].gain;
       });
       auto_connect_btn.selected = isAutoConnect;
       break;
     }
-    case "hiddenConnectBtn": {
+    case "rerender": {
+      rerenderSelect();
       break;
     }
     default:
@@ -27,10 +26,6 @@ browser.runtime.onMessage.addListener((msg: SendMsg, tabs) => {
       break;
     }
   }
-});
-
-EmitEvent.sliderChange.handle((data) => {
-  sendMessageToCurrentTabs("ctrl", data);
 });
 
 sendMessageToCurrentTabs("open", null);

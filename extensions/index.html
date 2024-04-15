@@ -61,6 +61,18 @@
     </md-tabs>
 
     <div id="board-panel" role="tabpanel" class="panel" aria-labelledby="board">
+      <md-icon-button title="儲存設定">
+        <md-icon>save_as</md-icon>
+      </md-icon-button>
+      <md-icon-button title="重置設定">
+        <md-icon>device_reset</md-icon>
+      </md-icon-button>
+      <md-icon-button title="掛載媒體">
+        <md-icon>add_link</md-icon>
+      </md-icon-button>
+      <md-icon-button title="刪除當前設定">
+        <md-icon>delete</md-icon>
+      </md-icon-button>
       <!-- slider: dynamic generate html element -->
     </div>
 
@@ -117,5 +129,23 @@
         </md-list-item>
       </md-list>
     </div>
+
+    <md-dialog>
+      <div slot="headline">儲存當前設定</div>
+      <md-filled-text-field
+        slot="content"
+        label="名稱"
+        value=""
+      ></md-filled-text-field>
+
+      <div class="footer" slot="actions">
+        <md-icon-button>
+          <md-icon>close</md-icon>
+        </md-icon-button>
+        <md-icon-button>
+          <md-icon>check</md-icon>
+        </md-icon-button>
+      </div>
+    </md-dialog>
   </body>
 </html>

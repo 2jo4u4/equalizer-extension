@@ -13,6 +13,9 @@
     "default_title": "Euqalizer",
     "default_popup": "index.html"
   },
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "matches": ["https://*/*"],

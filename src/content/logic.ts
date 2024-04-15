@@ -7,8 +7,8 @@ let equalizer: Equalizer;
   equalizer = new Equalizer();
   const { mainEqaulizerSetting = defFilter, autoConnectMedia = 1 } =
     await Store.getAll();
-  mainEqaulizerSetting.forEach(({ hz, init, type }) => {
-    const filter = equalizer.audio[type]({ f: hz, q: 0.7, g: init });
+  mainEqaulizerSetting.forEach(({ hz, q, gain, type }) => {
+    const filter = equalizer.audio[type]({ f: hz, q: q, g: gain });
     equalizer.addToQueue(filter);
   });
 
@@ -24,11 +24,11 @@ function getCurrentState() {
   equalizer.queue.forEach((filter) => {
     filters.push({
       hz: filter.frequency.value,
-      init: filter.gain.value,
+      gain: filter.gain.value,
       type: filter.type,
+      q: filter.Q.value,
     });
   });
-  console.log(filters);
   return filters;
 }
 
@@ -38,7 +38,6 @@ function listener(isAutoConnect: boolean) {
       case "open": {
         sendMessageToEuqalizer("initUI", {
           fliter: getCurrentState(),
-          isConnect: equalizer.isStream,
           isAutoConnect,
         });
         break;
@@ -49,13 +48,36 @@ function listener(isAutoConnect: boolean) {
       }
       case "ctrl": {
         const { index, val } = msg.data as MsgToFormat["ctrl"];
-        console.log({ index, val });
         const filter = equalizer.queue.get(index.toString());
         filter && (filter.gain.value = val);
         break;
       }
       case "store-setting": {
-        Store.set("mainEqaulizerSetting", getCurrentState());
+        const { isMain, name } = msg.data as MsgToFormat["store-setting"];
+        const filters = getCurrentState();
+        if (isMain) {
+          Store.set("mainEqaulizerSetting", filters);
+        } else {
+          const type = "customEqaulizerSetting";
+          Store.get(type).then((res = {}) => {
+            Store.set(type, {
+              [name]: { isCustom: true, filters },
+              ...res,
+            });
+          });
+        }
+        break;
+      }
+      case "store-delete-custom": {
+        const name = msg.data as MsgToFormat["store-delete-custom"];
+        Store.getAll().then(({ customEqaulizerSetting }) => {
+          if (customEqaulizerSetting && customEqaulizerSetting[name]) {
+            delete customEqaulizerSetting[name];
+            Store.set("customEqaulizerSetting", customEqaulizerSetting);
+
+            sendMessageToEuqalizer("rerender", { module: "filter-select" });
+          }
+        });
         break;
       }
       default:
@@ -69,9 +91,8 @@ function listener(isAutoConnect: boolean) {
 
 function connect() {
   const video = findMedia();
-  if (video) {
+  if (video && !equalizer.isStream) {
     equalizer.stream(video);
-    sendMessageToEuqalizer("hiddenConnectBtn", null);
   }
 }
 

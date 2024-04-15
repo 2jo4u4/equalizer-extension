@@ -1,9 +1,12 @@
 const MAIN_FILTER_SETTING = "mainEqaulizerSetting";
 const AUTO_CONNECT_MEDIA = "autoConnectMedia";
-
+const USEFUL_FILTER_SETTING = "usefulEqaulizerSetting";
+const CUSTOM_FILTER_SETTING = "customEqaulizerSetting";
 interface StoreDataType {
-  [MAIN_FILTER_SETTING]: Filter[];
-  [AUTO_CONNECT_MEDIA]: 0 | 1;
+  [MAIN_FILTER_SETTING]?: Filter[];
+  [AUTO_CONNECT_MEDIA]?: 0 | 1;
+  [USEFUL_FILTER_SETTING]?: FilterOption;
+  [CUSTOM_FILTER_SETTING]?: FilterOption;
 }
 
 export class Store {

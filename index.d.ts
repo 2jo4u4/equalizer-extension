@@ -6,16 +6,16 @@ declare global {
 
   interface MsgToFormat {
     initUI: {
-      fliter: Filter[];
-      isConnect: boolean;
+      fliter: Filters;
       isAutoConnect: boolean;
     };
+    rerender: { module: "filter-select" };
     open: null | undefined;
     connect: null | undefined;
     ctrl: { index: number; val: number };
     debug: any;
-    "store-setting": null | undefined;
-    hiddenConnectBtn: null | undefined;
+    "store-setting": { isMain: boolean; name: string };
+    "store-delete-custom": string;
   }
   interface SendMsg {
     type: NotifyType;
@@ -23,13 +23,15 @@ declare global {
   }
   interface Filter {
     hz: number;
-    init: number;
+    gain: number;
+    q: number;
     type: BiquadFilterType;
   }
+  type Filters = Filter[];
+  type FilterOption = Record<string, { isCustom: boolean; filters: Filters }>;
   interface FilterParam {
     f: number;
     q: number;
     g: number;
   }
-  //-----
 }

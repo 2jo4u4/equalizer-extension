@@ -4,6 +4,8 @@ import type { MdSwitch } from "@material/web/switch/switch";
 import type { MdFilledButton } from "@material/web/button/filled-button";
 import type { MdOutlinedButton } from "@material/web/button/outlined-button";
 import type { MdTextButton } from "@material/web/button/text-button";
+import type { MdOutlinedSelect } from "@material/web/select/outlined-select";
+import type { MdDialog } from "@material/web/dialog/dialog";
 
 const tabs = document.querySelector("#tabs") as MdTabs;
 const [tabs_board, tabs_help, tabs_setting] = tabs.querySelectorAll(
@@ -23,21 +25,11 @@ const auto_connect_btn = document.querySelector(
   "#auto-connect-media"
 ) as MdSwitch;
 
-const reset_filter_btn = document.createElement(
-  "md-filled-button"
-) as MdFilledButton;
-reset_filter_btn.innerText = "重置";
+const select_input = document.createElement(
+  "md-outlined-select"
+) as MdOutlinedSelect;
 
-const save_filter_btn = document.createElement(
-  "md-outlined-button"
-) as MdOutlinedButton;
-save_filter_btn.innerText = "保存";
-
-const connect_fliter_btn = document.createElement(
-  "md-text-button"
-) as MdTextButton;
-connect_fliter_btn.innerText = "掛載";
-
+const name_dialog = document.querySelector("md-dialog") as MdDialog;
 export {
   tabs,
   tabs_board,
@@ -47,7 +39,6 @@ export {
   tabs_setting,
   tabs_setting_container,
   auto_connect_btn,
-  reset_filter_btn,
-  save_filter_btn,
-  connect_fliter_btn,
+  select_input,
+  name_dialog,
 };
