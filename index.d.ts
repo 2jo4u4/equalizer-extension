@@ -1,8 +1,6 @@
 import type Browser from "webextension-polyfill";
-import type { Slider } from "./src/pop/customTag";
 
 declare global {
-  class CustomSliderElement extends Slider {}
   const browser: typeof Browser;
   type NotifyType = keyof MsgToFormat;
 

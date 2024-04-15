@@ -1,9 +1,0 @@
-export const tabsID = "tabs";
-export const helpTabsID = "help";
-export const boardTabsID = "board";
-export const settingTabsID = "setting";
-export const helpPanelID = "help-panel";
-export const boardPanelID = "board-panel";
-export const settingPanelID = "setting-panel";
-export const autoConnectMedia = "auto-connect-media";
-export const manualConnectMedia = "manual-connect-media";

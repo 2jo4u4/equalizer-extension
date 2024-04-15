@@ -5,8 +5,7 @@ import { SliderArray } from "./board-ctrl";
 
 import { sendMessageToCurrentTabs } from "../util";
 import { EmitEvent } from "./customEvent";
-import { autoConnectMedia } from "./ids";
-import { MdSwitch } from "@material/web/switch/switch";
+import { auto_connect_btn } from "./bind.element";
 
 browser.runtime.onMessage.addListener((msg: SendMsg, tabs) => {
   switch (msg.type) {
@@ -16,12 +15,7 @@ browser.runtime.onMessage.addListener((msg: SendMsg, tabs) => {
       SliderArray.forEach((el, index) => {
         el.value = fliter[index].init;
       });
-      const switchBtn = document.querySelector(
-        `#${autoConnectMedia}`
-      ) as MdSwitch | null;
-      if (switchBtn) {
-        switchBtn.selected = isAutoConnect;
-      }
+      auto_connect_btn.selected = isAutoConnect;
       break;
     }
     case "hiddenConnectBtn": {

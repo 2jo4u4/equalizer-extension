@@ -1,16 +1,16 @@
-import type { MdTabs } from "@material/web/tabs/tabs";
-import { boardPanelID, helpPanelID, settingPanelID } from "./ids";
+import {
+  tabs,
+  tabs_help_container,
+  tabs_board_container,
+  tabs_setting_container,
+} from "./bind.element";
 
 (async function () {
-  const tabs = document.querySelector("#tabs") as MdTabs | null;
   if (tabs) {
-    const help = document.querySelector(`#${helpPanelID}`) as HTMLElement;
-    const board = document.querySelector(`#${boardPanelID}`) as HTMLElement;
-    const setting = document.querySelector(`#${settingPanelID}`) as HTMLElement;
-    tabs.addEventListener("change", function (evt) {
-      board.hidden = tabs.activeTabIndex !== 0;
-      help.hidden = tabs.activeTabIndex !== 1;
-      setting.hidden = tabs.activeTabIndex !== 2;
+    tabs.addEventListener("change", function () {
+      tabs_board_container.hidden = tabs.activeTabIndex !== 0;
+      tabs_help_container.hidden = tabs.activeTabIndex !== 1;
+      tabs_setting_container.hidden = tabs.activeTabIndex !== 2;
     });
   }
 })();
