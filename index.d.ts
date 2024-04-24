@@ -9,13 +9,17 @@ declare global {
       fliter: Filters;
       isAutoConnect: boolean;
     };
-    rerender: { module: "filter-select" };
+    rerender: {
+      module: "filter-select-add" | "filter-select-delete";
+      name: string;
+    };
     open: null | undefined;
     connect: null | undefined;
     ctrl: { index: number; val: number };
     debug: any;
-    "store-setting": { isMain: boolean; name: string };
+    "store-setting": string;
     "store-delete-custom": string;
+    "setting-defalut": string;
   }
   interface SendMsg {
     type: NotifyType;

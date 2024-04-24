@@ -25,9 +25,7 @@ const auto_connect_btn = document.querySelector(
   "#auto-connect-media"
 ) as MdSwitch;
 
-const select_input = document.createElement(
-  "md-outlined-select"
-) as MdOutlinedSelect;
+const select_input = document.createElement("select");
 
 const name_dialog = document.querySelector("md-dialog") as MdDialog;
 export {

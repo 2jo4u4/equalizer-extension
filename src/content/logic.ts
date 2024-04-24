@@ -1,13 +1,24 @@
-import { Equalizer, Store, defFilter, sendMessageToEuqalizer } from "../util";
+import {
+  Equalizer,
+  Store,
+  sendMessageToEuqalizer,
+  usefulFilfter,
+} from "../util";
 
 let equalizer: Equalizer;
 
 (async function () {
   // Initial Data
   equalizer = new Equalizer();
-  const { mainEqaulizerSetting = defFilter, autoConnectMedia = 1 } =
-    await Store.getAll();
-  mainEqaulizerSetting.forEach(({ hz, q, gain, type }) => {
+  const {
+    mainEqaulizerSetting = "default",
+    usefulEqaulizerSetting = usefulFilfter,
+    customEqaulizerSetting = {},
+    autoConnectMedia = 1,
+  } = await Store.getAll();
+  const obj = Object.assign(usefulEqaulizerSetting, customEqaulizerSetting);
+  const target = obj[mainEqaulizerSetting];
+  target.filters.forEach(({ hz, q, gain, type }) => {
     const filter = equalizer.audio[type]({ f: hz, q: q, g: gain });
     equalizer.addToQueue(filter);
   });
@@ -48,36 +59,53 @@ function listener(isAutoConnect: boolean) {
       }
       case "ctrl": {
         const { index, val } = msg.data as MsgToFormat["ctrl"];
-        const filter = equalizer.queue.get(index.toString());
+        const filter = equalizer.queue.get((index + 1).toString());
         filter && (filter.gain.value = val);
         break;
       }
       case "store-setting": {
-        const { isMain, name } = msg.data as MsgToFormat["store-setting"];
+        const name = msg.data as MsgToFormat["store-setting"];
         const filters = getCurrentState();
-        if (isMain) {
-          Store.set("mainEqaulizerSetting", filters);
-        } else {
-          const type = "customEqaulizerSetting";
-          Store.get(type).then((res = {}) => {
-            Store.set(type, {
-              [name]: { isCustom: true, filters },
-              ...res,
+        const type = "customEqaulizerSetting";
+
+        Store.get(type).then((res = {}) => {
+          Store.set(type, {
+            [name]: { isCustom: true, filters },
+            ...res,
+          }).then(() => {
+            sendMessageToEuqalizer("rerender", {
+              module: "filter-select-add",
+              name,
             });
           });
-        }
+        });
         break;
       }
       case "store-delete-custom": {
         const name = msg.data as MsgToFormat["store-delete-custom"];
-        Store.getAll().then(({ customEqaulizerSetting }) => {
-          if (customEqaulizerSetting && customEqaulizerSetting[name]) {
-            delete customEqaulizerSetting[name];
-            Store.set("customEqaulizerSetting", customEqaulizerSetting);
-
-            sendMessageToEuqalizer("rerender", { module: "filter-select" });
+        Store.getAll().then(
+          ({ customEqaulizerSetting, mainEqaulizerSetting = "default" }) => {
+            if (customEqaulizerSetting && customEqaulizerSetting[name]) {
+              delete customEqaulizerSetting[name];
+              Store.set("customEqaulizerSetting", customEqaulizerSetting).then(
+                () => {
+                  sendMessageToEuqalizer("rerender", {
+                    module: "filter-select-delete",
+                    name,
+                  });
+                }
+              );
+              if (mainEqaulizerSetting === name) {
+                Store.set("mainEqaulizerSetting", "default");
+              }
+            }
           }
-        });
+        );
+        break;
+      }
+      case "setting-defalut": {
+        const name = msg.data as MsgToFormat["setting-defalut"];
+        Store.set("mainEqaulizerSetting", name);
         break;
       }
       default:

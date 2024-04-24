@@ -17,7 +17,8 @@ browser.runtime.onMessage.addListener((msg: SendMsg, tabs) => {
       break;
     }
     case "rerender": {
-      rerenderSelect();
+      const { module, name } = msg.data as MsgToFormat["rerender"];
+      rerenderSelect(module === "filter-select-add" ? name : undefined);
       break;
     }
     default:

@@ -2,7 +2,6 @@ import type { MdSlider } from "@material/web/slider/slider";
 import type { MdFilledTextField } from "@material/web/textfield/filled-text-field";
 
 import {
-  defFilter,
   hzToTitle,
   sendMessageToCurrentTabs,
   Store,
@@ -20,7 +19,7 @@ const SliderArray: MdSlider[] = [];
 (async function () {
   // -----
   const {
-    mainEqaulizerSetting = defFilter,
+    mainEqaulizerSetting = "default",
     usefulEqaulizerSetting = usefulFilfter,
     customEqaulizerSetting = {},
   } = await Store.getAll();
@@ -29,11 +28,11 @@ const SliderArray: MdSlider[] = [];
   const [
     save_filter_btn,
     reset_filter_btn,
-    connect_fliter_btn,
+    connect_filter_btn,
+    lock_filter_btn,
     delete_filter_btn,
   ] = tabs_board_container.querySelectorAll("md-icon-button");
   const btnContainer = document.createElement("div");
-  btnContainer.id = "btnContainer";
 
   reset_filter_btn.addEventListener("click", function () {
     Store.getAll().then(
@@ -41,24 +40,13 @@ const SliderArray: MdSlider[] = [];
         usefulEqaulizerSetting = usefulFilfter,
         customEqaulizerSetting = {},
       }) => {
-        let array: Filters = [];
-        if (select_input.value === "mainEqaulizerSetting") {
-        }
-        switch (select_input.value) {
-          case "default":
-            array = defFilter;
-            break;
-          default:
-            const { filters } =
-              usefulEqaulizerSetting[select_input.value] ||
-              customEqaulizerSetting[select_input.value];
-            array = filters;
-            break;
-        }
+        const { filters } =
+          usefulEqaulizerSetting[select_input.value] ||
+          customEqaulizerSetting[select_input.value];
 
-        array.forEach((filter, index) => {
+        filters.forEach((filter, index) => {
           sendMessageToCurrentTabs("ctrl", {
-            index: index + 1,
+            index,
             val: filter.gain,
           });
 
@@ -72,11 +60,15 @@ const SliderArray: MdSlider[] = [];
     name_dialog.show();
   });
 
-  connect_fliter_btn.addEventListener("click", function () {
+  connect_filter_btn.addEventListener("click", function () {
     sendMessageToCurrentTabs("connect", null);
   });
 
-  delete_filter_btn.addEventListener("click", function () {
+  lock_filter_btn.addEventListener("click", function () {
+    sendMessageToCurrentTabs("setting-defalut", select_input.value);
+  });
+
+  delete_filter_btn.addEventListener("click", async function () {
     sendMessageToCurrentTabs("store-delete-custom", select_input.value);
   });
 
@@ -95,47 +87,60 @@ const SliderArray: MdSlider[] = [];
       "md-filled-text-field"
     ) as MdFilledTextField;
     if (input.value) {
-      sendMessageToCurrentTabs("store-setting", {
-        isMain: false,
-        name: input.value,
-      });
+      sendMessageToCurrentTabs("store-setting", input.value);
       input.value = "";
-      rerenderSelect();
       name_dialog.close();
     }
   });
 
   // -------
-  const obj = Object.assign(
-    { default: mainEqaulizerSetting },
-    usefulEqaulizerSetting,
-    customEqaulizerSetting
-  );
-  Object.keys(obj).forEach((key) => {
-    const option = document.createElement("md-select-option");
+  Object.keys(usefulEqaulizerSetting).forEach((key) => {
+    const option = document.createElement("option");
     option.value = key;
     option.innerText = key;
-    option.dataset.isCustom = customEqaulizerSetting[key]?.isCustom ? "1" : "0";
-
+    option.dataset.isCustom = "0";
+    select_input.append(option);
+  });
+  Object.keys(customEqaulizerSetting).forEach((key) => {
+    const option = document.createElement("option");
+    option.value = key;
+    option.innerText = key;
+    option.dataset.isCustom = "1";
     select_input.append(option);
   });
 
-  select_input.value = "default";
-  select_input.addEventListener("change", function (evt) {
-    const array = obj[select_input.value];
-    if (array) {
-      SliderArray.forEach((el, index) => {
-        el.value = array.filters[index].gain;
-        sendMessageToCurrentTabs("ctrl", {
-          index,
-          val: array.filters[index].gain,
-        });
-      });
-    }
+  select_input.value = mainEqaulizerSetting;
+  select_input.addEventListener("change", function () {
+    Store.getAll().then(
+      ({
+        usefulEqaulizerSetting = usefulFilfter,
+        customEqaulizerSetting = {},
+      }) => {
+        const obj = Object.assign(
+          {},
+          usefulEqaulizerSetting,
+          customEqaulizerSetting
+        );
+        const array = obj[select_input.value];
+        if (array) {
+          SliderArray.forEach((el, index) => {
+            el.value = array.filters[index].gain;
+            sendMessageToCurrentTabs("ctrl", {
+              index,
+              val: array.filters[index].gain,
+            });
+          });
+        }
+      }
+    );
   });
 
   // ---------
-  mainEqaulizerSetting.forEach((item, index) => {
+  const { filters } =
+    usefulEqaulizerSetting[mainEqaulizerSetting] ||
+    customEqaulizerSetting[mainEqaulizerSetting];
+
+  filters.forEach((item, index) => {
     const slider = document.createElement("md-slider");
     slider.step = 0.5;
     slider.max = 12;
@@ -155,23 +160,27 @@ const SliderArray: MdSlider[] = [];
     tabs_board_container.appendChild(container).append(slider, labed);
     SliderArray.push(slider);
   });
+
+  sendMessageToCurrentTabs("open", null);
 })();
 
-async function rerenderSelect() {
-  const custom = (await Store.get("customEqaulizerSetting")) ?? {};
-  select_input.querySelectorAll("md-select-option").forEach((el) => {
+async function rerenderSelect(name?: string) {
+  select_input.querySelectorAll("option").forEach((el) => {
     if (el.dataset.isCustom === "1") {
       select_input.removeChild(el);
     }
   });
+  const custom = (await Store.get("customEqaulizerSetting")) ?? {};
   Object.keys(custom).forEach((key) => {
-    const option = document.createElement("md-select-option");
+    const option = document.createElement("option");
     option.value = key;
     option.innerText = key;
     option.dataset.isCustom = "1";
-
     select_input.append(option);
   });
+  if (name) {
+    select_input.value = name;
+  }
 }
 
 export { SliderArray, rerenderSelect };
