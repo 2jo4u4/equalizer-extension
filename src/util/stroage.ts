@@ -1,11 +1,13 @@
+const CHECK_DATA = "checkDataStatus";
 const MAIN_FILTER_SETTING = "mainEqaulizerSetting";
 const AUTO_CONNECT_MEDIA = "autoConnectMedia";
-const USEFUL_FILTER_SETTING = "usefulEqaulizerSetting";
+const ALWAYS_EXIST_FILTER_SETTING = "alwaysExistEqaulizerSetting";
 const CUSTOM_FILTER_SETTING = "customEqaulizerSetting";
 interface StoreDataType {
+  [CHECK_DATA]?: { version: string };
   [MAIN_FILTER_SETTING]?: string;
   [AUTO_CONNECT_MEDIA]?: 0 | 1;
-  [USEFUL_FILTER_SETTING]?: FilterOption;
+  [ALWAYS_EXIST_FILTER_SETTING]?: FilterOption;
   [CUSTOM_FILTER_SETTING]?: FilterOption;
 }
 

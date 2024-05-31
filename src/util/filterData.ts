@@ -1,4 +1,5 @@
-export const usefulFilfter: FilterOption = {
+export const defaluValue = "default";
+export const alwaysExistFilter: FilterOption = {
   default: {
     isCustom: false,
     filters: [
@@ -32,11 +33,11 @@ export const usefulFilfter: FilterOption = {
   "volume-enhance": {
     isCustom: false,
     filters: [
-      { hz: 60, gain: 8, q: 0.7, type: "peaking" },
-      { hz: 230, gain: 8, q: 0.7, type: "peaking" },
-      { hz: 910, gain: 10, q: 0.7, type: "peaking" },
-      { hz: 4000, gain: 12, q: 0.7, type: "peaking" },
-      { hz: 14000, gain: 12, q: 0.7, type: "peaking" },
+      { hz: 60, gain: 6, q: 0.7, type: "peaking" },
+      { hz: 230, gain: 12, q: 0.7, type: "peaking" },
+      { hz: 910, gain: 12, q: 0.7, type: "peaking" },
+      { hz: 4000, gain: 8, q: 0.7, type: "peaking" },
+      { hz: 14000, gain: 6, q: 0.7, type: "peaking" },
     ],
   },
 };

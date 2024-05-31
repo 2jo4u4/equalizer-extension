@@ -3,6 +3,7 @@ import type Browser from "webextension-polyfill";
 declare global {
   const browser: typeof Browser;
   type NotifyType = keyof MsgToFormat;
+  type ActionType = "save" | "delete" | "medialink" | "reset" | "favorite";
 
   interface MsgToFormat {
     initUI: {

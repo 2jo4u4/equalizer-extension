@@ -1,12 +1,13 @@
 {
   "manifest_version": 3,
   "name": "Euqalizer",
-  "version": "0.2.0",
+  "version": "0.4.0",
   "description": "等化器",
   "icons": {
     "32": "icons/ctrl-32.png",
     "64": "icons/ctrl-64.png"
   },
+  "default_locale": "zh",
   "permissions": ["activeTab", "storage"],
   "action": {
     "default_icon": "icons/ctrl-32.png",

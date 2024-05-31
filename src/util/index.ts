@@ -1,5 +1,5 @@
 export { Equalizer, AudioContextWithMethod } from "./euqalizer";
-export { usefulFilfter } from "./filterData";
+export { alwaysExistFilter, defaluValue } from "./filterData";
 export { Store } from "./stroage";
 export {
   hzToTitle,
@@ -7,3 +7,4 @@ export {
   sendMessageToCurrentTabs,
   sendMessageToEuqalizer,
 } from "./tool";
+export { VERSION } from "./version";

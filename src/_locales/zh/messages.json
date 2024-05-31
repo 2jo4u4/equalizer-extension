@@ -1,0 +1,81 @@
+{
+  "equalizer": {
+    "message": "等化器",
+    "description": "等化器"
+  },
+
+  "save": {
+    "message": "保存設定",
+    "description": "保存設定"
+  },
+  "reset": {
+    "message": "重置",
+    "description": "重置"
+  },
+  "medialink": {
+    "message": "連接音訊",
+    "description": "連接音訊"
+  },
+  "delete": {
+    "message": "刪除等化器設定",
+    "description": "刪除等化器設定"
+  },
+  "favorite": {
+    "message": "首選等化器",
+    "description": "首選等化器"
+  },
+  "saveError1": {
+    "message": "與系統名稱重複，請變更名稱",
+    "description": "與系統名稱重複，請變更名稱"
+  },
+  "saveErroe2": {
+    "message": "該名稱已存在，請選擇其他名稱或是先刪除既有名稱",
+    "description": "該名稱已存在，請選擇其他名稱或是先刪除既有名稱"
+  },
+  "saveSuccess": {
+    "message": "新增成功",
+    "description": "新增成功"
+  },
+  "deleteSuccess": {
+    "message": "刪除成功",
+    "description": "刪除成功"
+  },
+
+  "help": {
+    "message": "功能說明",
+    "description": "功能說明"
+  },
+  "aboutEqualizer": {
+    "message": "關於等化器",
+    "description": "關於等化器"
+  },
+  "60HZ": {
+    "message": "低音增益",
+    "description": "低音增益"
+  },
+  "230HZ": {
+    "message": "低音增益，亦可感受到音量增大",
+    "description": "低音增益"
+  },
+  "910HZ": {
+    "message": "中間增益，可以感受到音量增大",
+    "description": "中間增益"
+  },
+  "4000HZ": {
+    "message": "高音增益，可調整人聲的清晰度",
+    "description": "高音增益"
+  },
+  "14000HZ": {
+    "message": "高音增益",
+    "description": "高音增益"
+  },
+
+  "setting": {
+    "message": "設定",
+    "description": "設定"
+  },
+  "autoConnectMedia": {
+    "message": "自動取得元素",
+    "description": "自動取得元素"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "equalizer": {
+    "message": "等化器",
+    "description": "等化器"
+  },
+
+  "help": {
+    "message": "功能說明",
+    "description": "功能說明"
+  },
+  "setting": {
+    "message": "設定",
+    "description": "設定"
+  },
+  "save": {
+    "message": "保存設定",
+    "description": "保存設定"
+  },
+  "reset": {
+    "message": "重置",
+    "description": "重置"
+  },
+  "medialink": {
+    "message": "連接音訊",
+    "description": "連接音訊"
+  },
+  "delete": {
+    "message": "刪除等化器設定",
+    "description": "刪除等化器設定"
+  },
+  "favorite": {
+    "message": "最愛等化器",
+    "description": "最愛等化器"
+  }
+}

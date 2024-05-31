@@ -5,10 +5,9 @@ import CopyPlugin from "copy-webpack-plugin";
 const config: webpack.Configuration = {
   mode: "production",
   entry: {
-    pop: path.resolve(__dirname, "src/pop/index.ts"),
+    pop: path.resolve(__dirname, "src/pop/index.tsx"),
     background: path.resolve(__dirname, "src/background/index.ts"),
     content: path.resolve(__dirname, "src/content/index.ts"),
-    customTag: path.resolve(__dirname, "src/pop/customTag.ts"),
   },
   output: {
     clean: true,
@@ -20,20 +19,21 @@ const config: webpack.Configuration = {
       patterns: [
         { from: "extensions" },
         { from: "node_modules/webextension-polyfill/dist/browser-polyfill.js" },
+        { from: "src/_locales", to: "_locales" },
       ],
     }),
   ],
   module: {
     rules: [
       {
-        test: /\.ts$/i,
+        test: /\.tsx?$/i,
         loader: "ts-loader",
         exclude: ["/node_modules/"],
       },
     ],
   },
   resolve: {
-    extensions: [".ts", ".js"],
+    extensions: [".ts", ".js", ".tsx", ".jsx"],
   },
 };
 

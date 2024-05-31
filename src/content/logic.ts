@@ -2,7 +2,7 @@ import {
   Equalizer,
   Store,
   sendMessageToEuqalizer,
-  usefulFilfter,
+  alwaysExistFilter,
 } from "../util";
 
 let equalizer: Equalizer;
@@ -12,11 +12,14 @@ let equalizer: Equalizer;
   equalizer = new Equalizer();
   const {
     mainEqaulizerSetting = "default",
-    usefulEqaulizerSetting = usefulFilfter,
+    alwaysExistEqaulizerSetting = alwaysExistFilter,
     customEqaulizerSetting = {},
     autoConnectMedia = 1,
   } = await Store.getAll();
-  const obj = Object.assign(usefulEqaulizerSetting, customEqaulizerSetting);
+  const obj = Object.assign(
+    alwaysExistEqaulizerSetting,
+    customEqaulizerSetting
+  );
   const target = obj[mainEqaulizerSetting];
   target.filters.forEach(({ hz, q, gain, type }) => {
     const filter = equalizer.audio[type]({ f: hz, q: q, g: gain });
