@@ -119,19 +119,22 @@ export function App() {
       }
       case "delete": {
         const _curr = curr;
-        Store.get("customEqaulizerSetting").then(res => {
-          const _res = res || {};
-          delete _res[_curr];
-          Store.set("customEqaulizerSetting", _res).then(() => {
-            openAlertAndClose(browser.i18n.getMessage("deleteSuccess"), "success");
-          });
-          if (filters[_curr].isCustom) {
+        if (filters[_curr].isCustom) {
+          Store.get("customEqaulizerSetting").then(res => {
+            const _res = res || {};
+            delete _res[_curr];
+            Store.set("customEqaulizerSetting", _res).then(() => {
+              openAlertAndClose(browser.i18n.getMessage("deleteSuccess"), "success");
+            });
+
             setFilters(old => {
               delete old[_curr];
               return { ...old };
             });
-          }
-        });
+          });
+        } else {
+          openAlertAndClose(browser.i18n.getMessage("deleteFail"), "error");
+        }
         break;
       }
     }

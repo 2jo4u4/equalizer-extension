@@ -40,6 +40,10 @@
     "message": "刪除成功",
     "description": "刪除成功"
   },
+  "deleteFail": {
+    "message": "刪除成功",
+    "description": "刪除成功"
+  },
   "saveDialogTitle": {
     "message": "命名等化器",
     "description": "命名等化器"
