@@ -199,7 +199,7 @@ export function App() {
                   [filterName]: { filters: _filter, isCustom: true },
                 };
                 Store.set("customEqaulizerSetting", custom).then(() => {
-                  openAlertAndClose(browser.i18n.getMessage("success"), "success");
+                  openAlertAndClose(browser.i18n.getMessage("saveSuccess"), "success");
                   handleSetFilter(filterName, {
                     ...alwaysExistEqaulizerSetting,
                     ...custom,
