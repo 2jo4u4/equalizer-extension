@@ -100,27 +100,27 @@
   },
 
   "defaultEuqalize": {
-    "message": "標準等化",
+    "message": "標準等化(系統)",
     "description": "等化器設定值(預設)"
   },
   "lowEnhance": {
-    "message": "低頻強化",
+    "message": "低頻強化(系統)",
     "description": "等化器設定值"
   },
   "heightEnhance": {
-    "message": "高頻強化",
+    "message": "高頻強化(系統)",
     "description": "等化器設定值"
   },
   "volumeEnhance": {
-    "message": "音量強化",
+    "message": "音量強化(系統)",
     "description": "等化器設定值"
   },
   "lowReduce": {
-    "message": "低頻衰減",
+    "message": "低頻衰減(系統)",
     "description": "等化器設定值"
   },
   "heightReduce": {
-    "message": "高頻衰減",
+    "message": "高頻衰減(系統)",
     "description": "等化器設定值"
   }
 }

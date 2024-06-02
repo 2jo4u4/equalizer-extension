@@ -125,10 +125,12 @@ export function App() {
           Store.set("customEqaulizerSetting", _res).then(() => {
             openAlertAndClose(browser.i18n.getMessage("deleteSuccess"), "success");
           });
-          setFilters(old => {
-            old.isCustom && delete old[_curr];
-            return { ...old };
-          });
+          if (filters[_curr].isCustom) {
+            setFilters(old => {
+              delete old[_curr];
+              return { ...old };
+            });
+          }
         });
         break;
       }
