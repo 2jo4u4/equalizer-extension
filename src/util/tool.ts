@@ -6,12 +6,16 @@ export function hzToTitle(hz: number) {
   }
 }
 export async function getCurrentTabs() {
-  return await browser.tabs.query({ active: true, currentWindow: true });
+  try {
+    return await browser.tabs.query({ active: true, currentWindow: true });
+  } catch (e) {
+    return undefined;
+  }
 }
 
 export async function sendMessageToCurrentTabs<T extends NotifyType>(type: T, data: MsgToFormat[T]) {
   const tabs = await getCurrentTabs();
-  if (tabs[0].id !== undefined) browser.tabs.sendMessage(tabs[0].id, { type, data });
+  if (tabs !== undefined && tabs[0].id !== undefined) browser.tabs.sendMessage(tabs[0].id, { type, data });
 }
 
 export async function sendMessageToEuqalizer<T extends NotifyType>(type: T, data: MsgToFormat[T]) {
