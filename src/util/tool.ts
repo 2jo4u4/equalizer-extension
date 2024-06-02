@@ -9,17 +9,11 @@ export async function getCurrentTabs() {
   return await browser.tabs.query({ active: true, currentWindow: true });
 }
 
-export async function sendMessageToCurrentTabs<T extends NotifyType>(
-  type: T,
-  data: MsgToFormat[T]
-) {
+export async function sendMessageToCurrentTabs<T extends NotifyType>(type: T, data: MsgToFormat[T]) {
   const tabs = await getCurrentTabs();
-  browser.tabs.sendMessage(tabs[0].id ?? 0, { type, data });
+  if (tabs[0].id !== undefined) browser.tabs.sendMessage(tabs[0].id, { type, data });
 }
 
-export async function sendMessageToEuqalizer<T extends NotifyType>(
-  type: T,
-  data: MsgToFormat[T]
-) {
+export async function sendMessageToEuqalizer<T extends NotifyType>(type: T, data: MsgToFormat[T]) {
   browser.runtime.sendMessage({ type, data });
 }
