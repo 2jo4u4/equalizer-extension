@@ -8,7 +8,7 @@ import {
   MenuItem,
   FormControl,
   Select,
-  Divider,
+  Tooltip,
 } from "@mui/material";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -41,7 +41,7 @@ export function EqualizerSlider(props: {
             key={index}
             label={hzToTitle(filter.hz)}
             value={filter.gain}
-            onChange={(newVal) => {
+            onChange={newVal => {
               props.onChange && props.onChange(filter, index, newVal);
             }}
           ></FilterSlider>
@@ -51,11 +51,7 @@ export function EqualizerSlider(props: {
   );
 }
 
-function FilterSlider(props: {
-  label?: string;
-  value: number;
-  onChange: (value: number) => void;
-}) {
+function FilterSlider(props: { label?: string; value: number; onChange: (value: number) => void }) {
   const change = (val: number) => {
     props.onChange(val);
   };
@@ -63,14 +59,7 @@ function FilterSlider(props: {
     change(props.value + amount);
   };
   return (
-    <Grid
-      item
-      width={56}
-      container
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-    >
+    <Grid item width={56} container direction="column" alignItems="center" justifyContent="center">
       {props.label && (
         <Grid item>
           <Typography variant="caption">{props.label}</Typography>
@@ -115,30 +104,27 @@ function FilterSlider(props: {
   );
 }
 
-export function EqualizerSelect(props: {
-  filters: FilterOption;
-  value: string;
-  onSelect: (key: string) => void;
-}) {
+export function EqualizerSelect(props: { filters: FilterOption; value: string; onSelect: (key: string) => void }) {
   return (
     <Grid sx={{ width: 200, mb: 2 }}>
       <FormControl fullWidth>
-        <InputLabel id="Equalizer-Select">
-          {browser.i18n.getMessage("equalizer")}
-        </InputLabel>
+        <InputLabel id="Equalizer-Select">{browser.i18n.getMessage("equalizer")}</InputLabel>
         <Select
           labelId="Equalizer-Select"
           value={props.value}
           label="Equalizer"
-          onChange={(event) => {
+          onChange={event => {
             props.onSelect(event.target.value as string);
           }}
           size="small"
         >
-          {Object.keys(props.filters).map((key) => {
+          {Object.keys(props.filters).map(key => {
+            const i18nText = props.filters[key].i18nKey
+              ? browser.i18n.getMessage(props.filters[key].i18nKey as string)
+              : key;
             return (
               <MenuItem key={key} value={key}>
-                {key}
+                {i18nText}
               </MenuItem>
             );
           })}
@@ -148,52 +134,55 @@ export function EqualizerSelect(props: {
   );
 }
 
-export function EqualizerButtons(props: {
-  onClick: (type: ActionType) => void;
-}) {
+export function EqualizerButtons(props: { onClick: (type: ActionType) => void }) {
   return (
     <Grid sx={{ mb: 2 }}>
       <ButtonGroup variant="contained">
-        <IconButton
-          title={browser.i18n.getMessage("save")}
-          onClick={() => {
-            props.onClick("save");
-          }}
-        >
-          <SaveIcon />
-        </IconButton>
-        <IconButton
-          title={browser.i18n.getMessage("reset")}
-          onClick={() => {
-            props.onClick("reset");
-          }}
-        >
-          <RestoreIcon />
-        </IconButton>
-        <IconButton
-          title={browser.i18n.getMessage("medialink")}
-          onClick={() => {
-            props.onClick("medialink");
-          }}
-        >
-          <InsertLinkIcon />
-        </IconButton>
-        <IconButton
-          title={browser.i18n.getMessage("favorite")}
-          onClick={() => {
-            props.onClick("favorite");
-          }}
-        >
-          <StarsIcon />
-        </IconButton>
-        <IconButton
-          title={browser.i18n.getMessage("delete")}
-          onClick={() => {
-            props.onClick("delete");
-          }}
-        >
-          <DeleteForeverIcon />
-        </IconButton>
+        <Tooltip title={browser.i18n.getMessage("save")}>
+          <IconButton
+            onClick={() => {
+              props.onClick("save");
+            }}
+          >
+            <SaveIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={browser.i18n.getMessage("reset")}>
+          <IconButton
+            onClick={() => {
+              props.onClick("reset");
+            }}
+          >
+            <RestoreIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={browser.i18n.getMessage("medialink")}>
+          <IconButton
+            onClick={() => {
+              props.onClick("medialink");
+            }}
+          >
+            <InsertLinkIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={browser.i18n.getMessage("favorite")}>
+          <IconButton
+            onClick={() => {
+              props.onClick("favorite");
+            }}
+          >
+            <StarsIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={browser.i18n.getMessage("delete")}>
+          <IconButton
+            onClick={() => {
+              props.onClick("delete");
+            }}
+          >
+            <DeleteForeverIcon />
+          </IconButton>
+        </Tooltip>
       </ButtonGroup>
     </Grid>
   );

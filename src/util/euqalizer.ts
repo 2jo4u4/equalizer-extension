@@ -6,6 +6,12 @@ export class AudioContextWithMethod {
   createBiquadFilter() {
     return this.audioCtx.createBiquadFilter();
   }
+
+  useFilter(fliter: Filter) {
+    const { hz, q, gain, type } = fliter;
+    return this[type]({ f: hz, q: q, g: gain });
+  }
+
   allpass({ f, g, q }: FilterParam) {
     const filter = this.createBiquadFilter();
     filter.type = "allpass";
@@ -92,7 +98,7 @@ export class Equalizer {
       this.media = el;
       this.source = this.audioCtx.createMediaElementSource(this.media);
       let last: MediaElementAudioSourceNode | BiquadFilterNode = this.source;
-      this.queue.forEach((filter) => {
+      this.queue.forEach(filter => {
         last.connect(filter);
         last = filter;
       });

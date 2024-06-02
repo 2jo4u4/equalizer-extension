@@ -10,17 +10,11 @@ declare global {
       fliter: Filters;
       isAutoConnect: boolean;
     };
-    rerender: {
-      module: "filter-select-add" | "filter-select-delete";
-      name: string;
-    };
     open: null | undefined;
     connect: null | undefined;
     ctrl: { index: number; val: number };
+    groupCtrl: number[];
     debug: any;
-    "store-setting": string;
-    "store-delete-custom": string;
-    "setting-defalut": string;
   }
   interface SendMsg {
     type: NotifyType;
@@ -33,7 +27,7 @@ declare global {
     type: BiquadFilterType;
   }
   type Filters = Filter[];
-  type FilterOption = Record<string, { isCustom: boolean; filters: Filters }>;
+  type FilterOption = Record<string, { i18nKey?: string; isCustom: boolean; filters: Filters }>;
   interface FilterParam {
     f: number;
     q: number;

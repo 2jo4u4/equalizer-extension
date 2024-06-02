@@ -40,6 +40,22 @@
     "message": "刪除成功",
     "description": "刪除成功"
   },
+  "saveDialogTitle": {
+    "message": "命名等化器",
+    "description": "命名等化器"
+  },
+  "saveDialogField": {
+    "message": "等化器名稱",
+    "description": "命名等化器"
+  },
+  "confirm": {
+    "message": "確定",
+    "description": "確定"
+  },
+  "cencel": {
+    "message": "取消",
+    "description": "取消"
+  },
 
   "help": {
     "message": "功能說明",
@@ -77,5 +93,34 @@
   "autoConnectMedia": {
     "message": "自動取得元素",
     "description": "自動取得元素"
+  },
+  "autoConnectMediaTip": {
+    "message": "測試功能，若無自動連接，請以手動連接",
+    "description": "自動取得元素"
+  },
+
+  "defaultEuqalize": {
+    "message": "標準等化",
+    "description": "等化器設定值(預設)"
+  },
+  "lowEnhance": {
+    "message": "低頻強化",
+    "description": "等化器設定值"
+  },
+  "heightEnhance": {
+    "message": "高頻強化",
+    "description": "等化器設定值"
+  },
+  "volumeEnhance": {
+    "message": "音量強化",
+    "description": "等化器設定值"
+  },
+  "lowReduce": {
+    "message": "低頻衰減",
+    "description": "等化器設定值"
+  },
+  "heightReduce": {
+    "message": "高頻衰減",
+    "description": "等化器設定值"
   }
 }
