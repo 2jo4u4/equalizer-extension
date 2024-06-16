@@ -21,3 +21,15 @@ export async function sendMessageToCurrentTabs<T extends NotifyType>(type: T, da
 export async function sendMessageToEuqalizer<T extends NotifyType>(type: T, data: MsgToFormat[T]) {
   browser.runtime.sendMessage({ type, data });
 }
+
+export function cloneFilters(f: Filters): Filters {
+  const clone: Filters = [];
+  f.forEach((o, index) => {
+    clone[index] = cloneFilter(o);
+  });
+  return clone;
+}
+
+export function cloneFilter({ hz, q, gain, type }: Filter): Filter {
+  return { hz, q, gain, type };
+}

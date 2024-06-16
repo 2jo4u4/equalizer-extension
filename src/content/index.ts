@@ -1,10 +1,10 @@
-import { Store, alwaysExistFilter, defaluValue, VERSION, Equalizer, sendMessageToEuqalizer } from "../util";
+import { Store, ALWAYSEXIST, DEFALUTVALUE, VERSION, Equalizer, sendMessageToEuqalizer } from "../util";
 
 async function reset() {
   return Promise.all([
-    Store.set("mainEqaulizerSetting", defaluValue),
-    Store.set("alwaysExistEqaulizerSetting", alwaysExistFilter),
-    Store.set("customEqaulizerSetting", {}),
+    Store.set("mainOption", DEFALUTVALUE),
+    Store.set("alwaysExist", ALWAYSEXIST),
+    Store.set("customMap", new Map()),
   ]);
 }
 
@@ -22,23 +22,26 @@ let equalizer: Equalizer;
 
   // Initial Data
   const {
-    mainEqaulizerSetting = defaluValue,
-    alwaysExistEqaulizerSetting = alwaysExistFilter,
-    customEqaulizerSetting = {},
+    mainOption = DEFALUTVALUE,
+    alwaysExist = ALWAYSEXIST,
+    customMap = new Map() as FilterMaps,
   } = await Store.getAll();
 
   equalizer = new Equalizer();
-  const { filters } = customEqaulizerSetting[mainEqaulizerSetting] ?? alwaysExistEqaulizerSetting[mainEqaulizerSetting];
-  filters.forEach(filter => {
-    equalizer.addToQueue(equalizer.audio.useFilter(filter));
-  });
+  const obj = customMap.get(mainOption) || alwaysExist.get(mainOption);
+  if (obj) {
+    const { filters } = obj;
+    filters.forEach(filter => {
+      equalizer.addToQueue(equalizer.audio.useFilter(filter));
+    });
+  }
 
   connect();
   listener(true);
 })();
 
 function getCurrentState() {
-  const filters: Filter[] = [];
+  const filters: Filters = [];
   equalizer.queue.forEach(filter => {
     filters.push({
       hz: filter.frequency.value,
@@ -55,7 +58,7 @@ function listener(isAutoConnect: boolean) {
     switch (msg.type) {
       case "open": {
         sendMessageToEuqalizer("initUI", {
-          fliter: getCurrentState(),
+          filters: getCurrentState(),
           isAutoConnect,
         });
         break;
@@ -65,15 +68,9 @@ function listener(isAutoConnect: boolean) {
         break;
       }
       case "ctrl": {
-        const { index, val } = msg.data as MsgToFormat["ctrl"];
-        const filter = equalizer.queue.get((index + 1).toString());
-        filter && (filter.gain.value = val);
-        break;
-      }
-      case "groupCtrl": {
-        const newVals = msg.data as MsgToFormat["groupCtrl"];
-        newVals.forEach((val, index) => {
-          const filter = equalizer.queue.get((index + 1).toString());
+        const data = msg.data as MsgToFormat["ctrl"];
+        data.forEach(({ index, val }) => {
+          const filter = equalizer.queue.get(index.toString());
           filter && (filter.gain.value = val);
         });
         break;

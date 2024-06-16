@@ -6,14 +6,10 @@ declare global {
   type ActionType = "save" | "delete" | "medialink" | "reset" | "favorite";
 
   interface MsgToFormat {
-    initUI: {
-      fliter: Filters;
-      isAutoConnect: boolean;
-    };
+    initUI: { filters: Filters; isAutoConnect: boolean };
     open: null | undefined;
     connect: null | undefined;
-    ctrl: { index: number; val: number };
-    groupCtrl: number[];
+    ctrl: { index: number; val: number }[];
     debug: any;
   }
   interface SendMsg {
@@ -27,7 +23,8 @@ declare global {
     type: BiquadFilterType;
   }
   type Filters = Filter[];
-  type FilterOption = Record<string, { i18nKey?: string; isCustom: boolean; filters: Filters }>;
+  type FilterObject = { i18nKey?: string; filters: Filters };
+  type FilterMaps = Map<string, FilterObject>;
   interface FilterParam {
     f: number;
     q: number;

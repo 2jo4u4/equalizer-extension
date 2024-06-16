@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Slider,
   Grid,
@@ -20,10 +21,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 import { hzToTitle } from "../util";
 
-export function EqualizerSlider(props: {
-  filters: Filters;
-  onChange?: (filter: Filter, index: number, newVal: number) => void;
-}) {
+export function EqualizerSlider(props: { filters: Filters; onChange?: (index: number, newVal: number) => void }) {
   return (
     <Grid
       gap={0.5}
@@ -42,7 +40,7 @@ export function EqualizerSlider(props: {
             label={hzToTitle(filter.hz)}
             value={filter.gain}
             onChange={newVal => {
-              props.onChange && props.onChange(filter, index, newVal);
+              props.onChange && props.onChange(index, newVal);
             }}
           ></FilterSlider>
         );
@@ -104,7 +102,7 @@ function FilterSlider(props: { label?: string; value: number; onChange: (value: 
   );
 }
 
-export function EqualizerSelect(props: { filters: FilterOption; value: string; onSelect: (key: string) => void }) {
+export function EqualizerSelect(props: { filterMaps: FilterMaps; value: string; onSelect: (key: string) => void }) {
   return (
     <Grid sx={{ width: 200, mb: 2 }}>
       <FormControl fullWidth>
@@ -114,14 +112,12 @@ export function EqualizerSelect(props: { filters: FilterOption; value: string; o
           value={props.value}
           label="Equalizer"
           onChange={event => {
-            props.onSelect(event.target.value as string);
+            props.onSelect(event.target.value);
           }}
           size="small"
         >
-          {Object.keys(props.filters).map(key => {
-            const i18nText = props.filters[key].i18nKey
-              ? browser.i18n.getMessage(props.filters[key].i18nKey as string)
-              : key;
+          {Array.from(props.filterMaps).map(([key, { i18nKey }]) => {
+            const i18nText = i18nKey ? browser.i18n.getMessage(i18nKey as string) : key;
             return (
               <MenuItem key={key} value={key}>
                 {i18nText}

@@ -15,17 +15,14 @@ import {
 } from "@mui/material";
 import StraightenIcon from "@mui/icons-material/Straighten";
 import HelpIcon from "@mui/icons-material/Help";
-import SettingsIcon from "@mui/icons-material/Settings";
 
-import { Store, alwaysExistFilter, sendMessageToCurrentTabs } from "../util";
+import { Store, sendMessageToCurrentTabs, StoreDataType, cloneFilters } from "../util";
 import { Help } from "./Help";
-import { Settings } from "./Setting";
 import { EqualizerButtons, EqualizerSelect, EqualizerSlider } from "./Equalizer";
 
-const defaultFilter = "default";
 const tabsize = { height: 36, minHeight: 36 };
 
-export function App() {
+export function App({ storeData }: { storeData: Required<StoreDataType> }) {
   const [ctrlDialog, setCtrlDialog] = React.useState(false);
   const [ctrlAlert, setCtrlAlert] = React.useState({
     open: false,
@@ -33,30 +30,21 @@ export function App() {
     type: "success" as "success" | "error",
   });
   const [tabIndex, setTabIndex] = React.useState(0);
-  const [filters, setFilters] = React.useState<FilterOption>({});
-  const [curr, setCurr] = React.useState(defaultFilter);
-  const [mainFliter, setMainFilter] = React.useState<Filters>(alwaysExistFilter[defaultFilter].filters);
-  const [autoConnect, setAutoConnect] = React.useState(false);
+  const [curr, setCurr] = React.useState(storeData.mainOption);
+  const [filterMap, setFilterMaps] = React.useState<FilterMaps>(
+    new Map([...storeData.alwaysExist, ...storeData.customMap])
+  );
+  const [mainFilter, setMainFilter] = React.useState<Filters>(() => {
+    const { filters } = filterMap.get(curr) as FilterObject;
+    return filters;
+  });
 
   React.useEffect(() => {
     browser.runtime.onMessage.addListener((msg: SendMsg) => {
       switch (msg.type) {
         case "initUI": {
-          const data = msg.data as MsgToFormat["initUI"];
-
-          Store.getAll().then(result => {
-            const {
-              mainEqaulizerSetting = defaultFilter,
-              alwaysExistEqaulizerSetting = alwaysExistFilter,
-              customEqaulizerSetting = {},
-            } = result;
-
-            setCurr(mainEqaulizerSetting);
-            setMainFilter(data.fliter);
-            setFilters(Object.assign(alwaysExistEqaulizerSetting, customEqaulizerSetting));
-            setAutoConnect(false);
-          });
-
+          const { filters } = msg.data as MsgToFormat["initUI"];
+          setMainFilter(cloneFilters(filters));
           break;
         }
       }
@@ -64,20 +52,34 @@ export function App() {
     sendMessageToCurrentTabs("open", null);
   }, []);
 
-  const handleSetFilter = (key: string, _filters: FilterOption = filters) => {
+  /**
+   * 選單設定等化器
+   * @param key 選項值
+   * @param map 所有選項(更新可選的選項: 儲存成功時)
+   */
+  const handleSetFilter = (key: string, map: FilterMaps = filterMap) => {
+    const f = cloneFilters((map.get(key) as FilterObject).filters);
     setCurr(key);
-    setMainFilter(_filters[key].filters);
-    setFilters(_filters);
+    setMainFilter(f);
+    setFilterMaps(map);
     sendMessageToCurrentTabs(
-      "groupCtrl",
-      _filters[key].filters.map(({ gain }) => gain)
+      "ctrl",
+      f.map(({ gain }, index) => ({ index, val: gain }))
     );
   };
 
+  /**
+   * 關閉 命名對話窗
+   */
   const handleClose = () => {
     setCtrlDialog(false);
   };
 
+  /**
+   * 使用者操作後提示之訊息
+   * @param msg 提示使用者之訊息
+   * @param type 類型樣式
+   */
   const openAlertAndClose = (msg: string = "", type: "success" | "error" = "error") => {
     setCtrlAlert({ open: true, msg, type });
     setTimeout(() => {
@@ -85,24 +87,25 @@ export function App() {
     }, 1000);
   };
 
-  const handleMainFilterChange = (filter: Filter, index: number, newVal: number) => {
+  /**
+   * 變更當前的等化器設定
+   * @param filter 等化器
+   * @param index 引索值(第幾個)
+   * @param newVal 變更後的值
+   */
+  const handleMainFilterChange = (index: number, newVal: number) => {
     setMainFilter(old => {
-      const _newVal = newVal >= 12 ? 12 : newVal <= -12 ? -12 : newVal;
-      old[index] = { ...filter, gain: _newVal };
-      return [...old];
+      const gain = newVal >= 12 ? 12 : newVal <= -12 ? -12 : newVal;
+      old[index].gain = gain;
+      return cloneFilters(old);
     });
-    sendMessageToCurrentTabs("ctrl", { index, val: newVal });
-  };
-
-  const handleMediaAutoConnect = (val: boolean) => {
-    setAutoConnect(val);
-    Store.set("autoConnectMedia", val ? 1 : 0);
+    sendMessageToCurrentTabs("ctrl", [{ index, val: newVal }]);
   };
 
   const handleAction = (type: ActionType) => {
     switch (type) {
       case "favorite": {
-        Store.set("mainEqaulizerSetting", curr);
+        Store.set("mainOption", curr);
         break;
       }
       case "medialink": {
@@ -110,7 +113,8 @@ export function App() {
         break;
       }
       case "reset": {
-        setMainFilter([...filters[curr].filters]);
+        const { filters } = filterMap.get(curr) as FilterObject;
+        setMainFilter(cloneFilters(filters));
         break;
       }
       case "save": {
@@ -119,17 +123,16 @@ export function App() {
       }
       case "delete": {
         const _curr = curr;
-        if (filters[_curr].isCustom) {
-          Store.get("customEqaulizerSetting").then(res => {
-            const _res = res || {};
-            delete _res[_curr];
-            Store.set("customEqaulizerSetting", _res).then(() => {
+        const filterObj = filterMap.get(_curr);
+        if (filterObj && filterObj.i18nKey === undefined) {
+          Store.getAll().then(res => {
+            const { alwaysExist, customMap } = res;
+            const _alwaysExist = new Map(alwaysExist);
+            const _customMap = new Map(customMap);
+            _customMap.delete(_curr);
+            setFilterMaps(new Map([..._alwaysExist, ..._customMap]));
+            Store.set("customMap", _customMap).then(() => {
               openAlertAndClose(browser.i18n.getMessage("deleteSuccess"), "success");
-            });
-
-            setFilters(old => {
-              delete old[_curr];
-              return { ...old };
             });
           });
         } else {
@@ -152,7 +155,6 @@ export function App() {
       >
         <Tab iconPosition="start" icon={<StraightenIcon />} label={browser.i18n.getMessage("equalizer")} sx={tabsize} />
         <Tab iconPosition="start" icon={<HelpIcon />} label={browser.i18n.getMessage("help")} sx={tabsize} />
-        {/* <Tab iconPosition="start" icon={<SettingsIcon />} label={browser.i18n.getMessage("setting")} sx={tabsize} /> */}
       </Tabs>
       <Paper
         elevation={3}
@@ -167,15 +169,14 @@ export function App() {
           mb: 1,
         }}
       >
-        {tabIndex === 0 && mainFliter && (
+        {tabIndex === 0 && mainFilter && (
           <React.Fragment>
             <EqualizerButtons onClick={handleAction} />
-            <EqualizerSelect filters={filters} value={curr} onSelect={handleSetFilter} />
-            <EqualizerSlider filters={mainFliter} onChange={handleMainFilterChange} />
+            <EqualizerSelect filterMaps={filterMap} value={curr} onSelect={handleSetFilter} />
+            <EqualizerSlider filters={mainFilter} onChange={handleMainFilterChange} />
           </React.Fragment>
         )}
         {tabIndex === 1 && <Help></Help>}
-        {tabIndex === 2 && <Settings value={autoConnect} onChange={handleMediaAutoConnect}></Settings>}
       </Paper>
       <Dialog
         open={ctrlDialog}
@@ -187,23 +188,20 @@ export function App() {
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries((formData as any).entries());
             const filterName = formJson.filterName as string;
-            const _filter = mainFliter;
-            Store.getAll().then(({ alwaysExistEqaulizerSetting = {}, customEqaulizerSetting = {} }) => {
-              if (Object.keys(alwaysExistEqaulizerSetting).includes(filterName)) {
+            const filters = cloneFilters(mainFilter);
+            Store.getAll().then(({ alwaysExist, customMap }) => {
+              const _alwaysExist = new Map(alwaysExist);
+              const _customMap = new Map(customMap);
+              if (_alwaysExist.has(filterName)) {
                 openAlertAndClose(browser.i18n.getMessage("saveError1"));
-              } else if (Object.keys(customEqaulizerSetting).includes(filterName)) {
+              } else if (_customMap.has(filterName)) {
                 openAlertAndClose(browser.i18n.getMessage("saveErroe2"));
               } else {
-                const custom = {
-                  ...customEqaulizerSetting,
-                  [filterName]: { filters: _filter, isCustom: true },
-                };
-                Store.set("customEqaulizerSetting", custom).then(() => {
+                _customMap.set(filterName, { filters });
+                Store.set("customMap", _customMap).then(() => {
                   openAlertAndClose(browser.i18n.getMessage("saveSuccess"), "success");
-                  handleSetFilter(filterName, {
-                    ...alwaysExistEqaulizerSetting,
-                    ...custom,
-                  });
+                  const totalMap = new Map([..._alwaysExist, ..._customMap]);
+                  handleSetFilter(filterName, totalMap);
                 });
               }
             });

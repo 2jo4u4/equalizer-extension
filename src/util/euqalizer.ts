@@ -7,8 +7,8 @@ export class AudioContextWithMethod {
     return this.audioCtx.createBiquadFilter();
   }
 
-  useFilter(fliter: Filter) {
-    const { hz, q, gain, type } = fliter;
+  useFilter(filter: Filter) {
+    const { hz, q, gain, type } = filter;
     return this[type]({ f: hz, q: q, g: gain });
   }
 

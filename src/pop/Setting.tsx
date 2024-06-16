@@ -1,5 +1,8 @@
 import { Container, Divider, List, ListItem, ListItemText, Switch, Tooltip } from "@mui/material";
 
+/**
+ * @deprecated
+ */
 export function Settings(props: { value: boolean; onChange: (val: boolean) => void }) {
   return (
     <Container>
